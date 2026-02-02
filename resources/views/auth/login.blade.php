@@ -2,8 +2,8 @@
     <div class="space-y-6 text-[#e8ebf0]">
         <div>
             <p class="text-xs font-semibold uppercase tracking-[0.35em] text-[#9aa3ad]">Welcome back</p>
-            <h2 class="mt-3 font-['Bebas_Neue'] text-4xl tracking-wide text-white sm:text-5xl">Join the Ride</h2>
-            <p class="mt-3 text-sm text-[#b3bcc7]">Return to your garage and keep the local moto community moving.</p>
+            <h2 class="mt-3 font-['Bebas_Neue'] text-4xl tracking-[0.06em] text-[#d6a756] sm:text-5xl">Join the Ride</h2>
+            <p class="mt-3 text-sm text-[#b3bcc7]">Sign in to EL MAHI MOTO SHOP and stay connected to your trusted garage.</p>
         </div>
 
         <!-- Session Status -->
@@ -18,11 +18,11 @@
                 <div class="relative mt-2">
                     <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#8b95a1]">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <path d="M4 6h16v12H4z" />
-                            <path d="m4 7 8 6 8-6" />
+                            <circle cx="7" cy="12" r="3" />
+                            <path d="M10 12h9l2 2-2 2h-2l-2-2h-5" />
                         </svg>
                     </span>
-                    <x-text-input id="email" class="block w-full rounded-xl border border-white/10 bg-[#0f1216]/70 px-10 py-3 text-sm text-white shadow-sm outline-none transition focus:border-[#ffb04f] focus:ring-2 focus:ring-[#ffb04f]/30 @error('email') !border-rose-500 !ring-rose-500/30 @enderror" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                    <x-text-input id="email" class="block w-full rounded-xl border border-white/10 bg-[#0f1216]/70 px-10 py-3 text-sm text-white shadow-sm outline-none transition focus:border-[#d9805a] focus:ring-2 focus:ring-[#d9805a]/30 @error('email') !border-rose-500 !ring-rose-500/30 @enderror" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
                 </div>
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-rose-300" />
             </div>
@@ -35,9 +35,10 @@
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M7 11V8a5 5 0 0 1 10 0v3" />
                             <rect x="5" y="11" width="14" height="9" rx="2" />
+                            <path d="M12 15v2" />
                         </svg>
                     </span>
-                    <x-text-input id="password" class="block w-full rounded-xl border border-white/10 bg-[#0f1216]/70 px-10 py-3 text-sm text-white shadow-sm outline-none transition focus:border-[#ffb04f] focus:ring-2 focus:ring-[#ffb04f]/30 @error('password') !border-rose-500 !ring-rose-500/30 @enderror"
+                    <x-text-input id="password" class="block w-full rounded-xl border border-white/10 bg-[#0f1216]/70 px-10 py-3 text-sm text-white shadow-sm outline-none transition focus:border-[#d9805a] focus:ring-2 focus:ring-[#d9805a]/30 @error('password') !border-rose-500 !ring-rose-500/30 @enderror"
                         type="password"
                         name="password"
                         required autocomplete="current-password" />
@@ -61,7 +62,7 @@
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p class="text-sm text-[#9aa3ad]">
                     New here?
-                    <a class="font-semibold text-[#ffb04f] hover:text-[#ffcc7f]" href="{{ route('register') }}">Create an account</a>
+                    <a class="font-semibold text-[#ffb04f] hover:text-[#ffcc7f]" href="{{ route('register') }}">Create an Account</a>
                 </p>
                 <x-primary-button class="inline-flex items-center justify-center !rounded-xl !bg-[#ffb04f] !px-6 !py-3 !text-sm !font-semibold !normal-case !tracking-normal text-[#1a1e24] shadow-[0_18px_35px_-20px_rgba(255,176,79,0.85)] transition hover:!bg-[#ffcc7f] focus:ring-2 focus:ring-[#ffb04f]/40">
                     {{ __('Ride In') }}
