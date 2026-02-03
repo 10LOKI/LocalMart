@@ -1,6 +1,6 @@
-<mxfile host="drawio-plugin" modified="2026-02-02T21:53:32.413Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="nh4mtJgsk_bcDZvuB2YZ" version="22.1.22" type="embed">
+<mxfile host="drawio-plugin" modified="2026-02-03T15:02:03.269Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" etag="nx7awEwniW_p-uOK1QTI" version="22.1.22" type="embed">
   <diagram id="RtBZ6pJ-AbzFqkwA-9QY" name="Page-1">
-    <mxGraphModel dx="611" dy="1580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1210" dy="1628" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -25,7 +25,7 @@
         <mxCell id="15" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Produit&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="680" y="260" width="210" height="400" as="geometry" />
         </mxCell>
-        <mxCell id="16" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;- id : Long&lt;br&gt;-vendeur_id : Long&lt;br&gt;- categorie_id : Long&lt;br&gt;- nom : string&lt;br&gt;- description : string&lt;br&gt;- prix : int&lt;br&gt;- stock : int&lt;br&gt;-est_actif : boolean&lt;br&gt;-- cree_le : date&lt;br&gt;&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="15" vertex="1">
+        <mxCell id="16" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;- id : Long&lt;br&gt;-vendeur_id : Long&lt;br&gt;- categorie_id : Long&lt;br&gt;- nom : string&lt;br&gt;- description : string&lt;br&gt;- prix : int&lt;br&gt;- stock : int&lt;br&gt;-est_actif : boolean&lt;br&gt;-cree_le : date&lt;br&gt;&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="15" vertex="1">
           <mxGeometry y="26" width="210" height="214" as="geometry" />
         </mxCell>
         <mxCell id="17" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="15" vertex="1">
@@ -37,7 +37,7 @@
         <mxCell id="20" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Catégorie&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="-160" width="210" height="230" as="geometry" />
         </mxCell>
-        <mxCell id="21" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;- id : Long&lt;br&gt;- nom : string&lt;br&gt;- slug&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="20" vertex="1">
+        <mxCell id="21" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;- id : Long&lt;br&gt;- nom : string&lt;br&gt;- slug: string&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="20" vertex="1">
           <mxGeometry y="26" width="210" height="74" as="geometry" />
         </mxCell>
         <mxCell id="22" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="20" vertex="1">
@@ -109,11 +109,11 @@
         <mxCell id="45" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Paiement&amp;nbsp;&lt;/font&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="910" y="560" width="210" height="270" as="geometry" />
         </mxCell>
-        <mxCell id="48" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;+ initierPaiement()&lt;br&gt;+confirmerPaiement()&lt;br&gt;+echouerPAiement()&lt;br&gt;+traiterWebhook()&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="45" vertex="1">
-          <mxGeometry y="26" width="210" height="92" as="geometry" />
-        </mxCell>
         <mxCell id="46" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;- id : long&amp;nbsp;&lt;br&gt;-commande_id : long&amp;nbsp;&lt;br&gt;- fournisseur (stripe/ Mollie)&lt;br&gt;- statut :&amp;nbsp;&lt;br&gt;- transaction_id :&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="45" vertex="1">
-          <mxGeometry y="118" width="210" height="144" as="geometry" />
+          <mxGeometry y="26" width="210" height="144" as="geometry" />
+        </mxCell>
+        <mxCell id="48" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;+ initierPaiement()&lt;br&gt;+confirmerPaiement()&lt;br&gt;+echouerPAiement()&lt;br&gt;+traiterWebhook()&lt;br&gt;&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="45" vertex="1">
+          <mxGeometry y="170" width="210" height="92" as="geometry" />
         </mxCell>
         <mxCell id="47" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="45" vertex="1">
           <mxGeometry y="262" width="210" height="8" as="geometry" />
