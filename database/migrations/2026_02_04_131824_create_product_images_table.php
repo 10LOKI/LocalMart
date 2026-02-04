@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table -> enum('role',['client','vendeur','admin']) -> default('client');
-            $table -> boolean('est_actif') -> default(true);
+        Schema::create('product_images', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table -> dropColumn(['role','est_actif']);
-        });
+        Schema::dropIfExists('product_images');
     }
 };
