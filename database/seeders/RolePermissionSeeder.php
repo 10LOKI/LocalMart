@@ -5,55 +5,70 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\Models\User;
 
 class RolePermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $permissions =
-            [
-                'view-users',
-                'create-users',
-                'edit-users',
-                'delete-users',
-                'view-products',
-                'create-products',
-                'edit-products',
-                'delete-products',
-                'view-orders',
-                'create-orders',
-                'edit-orders',
-                'delete-orders'
-            ];
-        foreach ($permissions as $permission)
-        {
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // Create permissions
+        $permissions = [
+            // Product permissions
+            'create products',
+            'edit products',
+            'delete products',
+            'view products',
+            
+            // Order permissions
+            'create orders',
+            'view orders',
+            'update order status',
+            'view all orders',
+            
+            // User permissions
+            'manage users',
+            'manage roles',
+            
+            // Review permissions
+            'create reviews',
+            'delete reviews',
+            'moderate reviews',
+        ];
+
+        foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
-        $admin = Role::create(['name' => 'admin']);
-        $manager = Role::create(['name' => 'manager']);
-        $customer = Role::create(['name' => 'customer']);
 
-        $admin -> givePermissionTo(Permission::all());
-        $manager -> givePermissionTo([
-            'view-products',
-            'create-products',
-            'edit-products',
-            'view-orders',
-            'edit-orders',
-        ]);
+      
+        $customer = Role::create(['name' => 'customer']);
         $customer->givePermissionTo([
-            'view-products',
-            'create-orders',
-            'view-orders',
+            'view products',
+            'create orders',
+            'view orders',
+            'create reviews',
         ]);
-        $user = User::find(1);
-        if($user)
-        {
-            $user -> assignRole('admin');
-        }
+
+        
+        $seller = Role::create(['name' => 'seller']);
+        $seller->givePermissionTo([
+            'create products',
+            'edit products',
+            'delete products',
+            'view products',
+            'view orders',
+            'update order status',
+        ]);
+
+
+        $moderator = Role::create(['name' => 'moderator']);
+        $moderator->givePermissionTo([
+            'view products',
+            'delete reviews',
+            'moderate reviews',
+        ]);
+
+        $admin = Role::create(['name' => 'admin']);
+        $admin->givePermissionTo(Permission::all());
     }
 }

@@ -6,23 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table -> foreignId('client_id') -> constrained('users') -> onDelete('cascade');
-            $table -> enum('status',['en_attente','confirme','expedie','livre','annule']) -> default('en_attente');
-            $table -> decimal('prix_total',10,2);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('order_number')->unique();
+            $table->enum('status', ['on_hold', 'paid', 'delivered'])->default('on_hold');
+            $table->decimal('total', 10, 2);
+            $table->text('address');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');
