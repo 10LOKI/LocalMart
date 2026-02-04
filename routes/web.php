@@ -8,18 +8,16 @@ use App\Http\Controllers\AdminController;
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< HEAD
-Route::middleware(['auth','permission:view-products']) -> group(function ()
-{
-    Route::get('/products',[ProductController::class,'index']);
+
+Route::middleware(['auth','permission:view-products'])->group(function () {
+    Route::get('/products', [ProductController::class, 'index']);
 });
-Route::middleware(['auth','role:admin']) ->group(function ()
-{
+
+Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
-=======
+});
 
 Route::get('/dashboard', function () {
-    // TODO: add auth + role-based middleware here.
     return view('dashboard.index');
 })->name('dashboard');
 
@@ -27,7 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
->>>>>>> adcaaf52d9e0f40a18e8c31d0aea7ca95f453fbc
 });
 
 require __DIR__.'/auth.php';
