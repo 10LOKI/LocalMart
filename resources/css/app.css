@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --lm-ink: 15 23 42;
+        --lm-surface: 255 255 255;
+        --lm-accent: 14 165 233;
+        --lm-accent-soft: 56 189 248;
+        --lm-warm: 249 115 22;
+        --lm-muted: 148 163 184;
+    }
+
+    body {
+        color: rgb(var(--lm-ink));
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer utilities {
+    @keyframes lm-fade-up {
+        0% {
+            opacity: 0;
+            transform: translate3d(0, 12px, 0);
+        }
+        100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    .animate-lm-fade-up {
+        animation: lm-fade-up 0.6s ease both;
+    }
+
+    .lm-delay-1 { animation-delay: 0.08s; }
+    .lm-delay-2 { animation-delay: 0.16s; }
+    .lm-delay-3 { animation-delay: 0.24s; }
+    .lm-delay-4 { animation-delay: 0.32s; }
+    .lm-delay-5 { animation-delay: 0.4s; }
+}
