@@ -50,5 +50,10 @@ class RolePermissionSeeder extends Seeder
             'create-orders',
             'view-orders',
         ]);
+        $user = User::find(1);
+        if($user)
+        {
+            $user -> assignRole('admin');
+        }
     }
 }
