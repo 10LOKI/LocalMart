@@ -1173,7 +1173,7 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        @if(!auth()->user()->hasRole('seller'))
+                        @role('customer')
                             <div class="modal-actions">
                                 <button wire:click="addToCart({{ $selectedProduct->id }})" class="modal-add-to-cart-btn">
                                     <i class="fas fa-shopping-cart"></i> ADD TO CART
@@ -1182,7 +1182,7 @@
                                     <i class="fas fa-credit-card"></i> CHECKOUT
                                 </button>
                             </div>
-                        @endif
+                        @endrole
 
                         <!-- Reviews Section -->
                         <div class="reviews-section">

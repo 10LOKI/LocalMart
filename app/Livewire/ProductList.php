@@ -105,13 +105,13 @@ class ProductList extends Component
 
         if ($like) {
             $like->delete();
-            session()->flash('message', 'Product removed from favorites!');
+            session()->flash('message', "We're Sorry It Didn't Meet Your Satisfaction :(...");
         } else {
             Like::create([
                 'product_id' => $productId,
                 'user_id' => $userId
             ]);
-            session()->flash('message', 'Product added to favorites!');
+            session()->flash('message', "You Liked The Product, We'd Love To Hear Your Review About It.");
         }
        
         if ($this->selectedProduct && $this->selectedProduct->id == $productId) {
