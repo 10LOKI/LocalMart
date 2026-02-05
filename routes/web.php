@@ -16,13 +16,25 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $role = auth()->user()->role ?? 'customer';
+    return redirect()->route($role . '.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+//des routes qui redirigent selon les roles
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/products', function () {
+        $role = auth()->user()->role ?? 'customer';
+        return redirect()->route($role . '.products');
+    });
+
+    Route::get('/categories', function () {
+        $role = auth()->user()->role ?? 'customer';
+        return redirect()->route($role . '.categories');
+    });
+
+    Route::get('/orders', function () {
+        $role = auth()->user()->role ?? 'customer';
+        return redirect()->route($role . '.orders');
+    });
 });
 
 // Routes admin
@@ -48,7 +60,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('seller')->name('seller.')->g
 });
 
 // Routes Customer
-Route::middleware(['auth', 'role:customer'])->group(function () {
+Route::middleware(['auth', 'role:customer'])->prefix('customer') -> name('customer.')->group(function () {
+    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
     Route::get('/categories', CategoryList::class)->name('categories');
     Route::get('/products', ProductList::class)->name('products');
     Route::get('/orders', OrderList::class)->name('orders');
