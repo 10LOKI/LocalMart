@@ -343,6 +343,88 @@
             border-top: 1px solid rgba(42, 42, 42, 0.1);
         }
 
+        .card-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .view-btn, .add-to-cart-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .view-btn {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
+        .view-btn:hover {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .add-to-cart-btn {
+            background: var(--sage);
+            color: var(--soft-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--terracotta);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .modal-add-to-cart-btn, .modal-checkout-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .modal-add-to-cart-btn {
+            background: var(--sage);
+            color: var(--soft-white);
+        }
+
+        .modal-add-to-cart-btn:hover {
+            background: var(--terracotta);
+        }
+
+        .modal-checkout-btn {
+            background: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .modal-checkout-btn:hover {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
         .product-price {
             font-size: 1.75rem;
             font-weight: 400;
@@ -1089,6 +1171,18 @@
                                 <div class="meta-value">{{ $selectedProduct->reviews->count() }}</div>
                             </div>
                         </div>
+
+                        <!-- Action Buttons -->
+                        @if(!auth()->user()->hasRole('seller'))
+                            <div class="modal-actions">
+                                <button wire:click="addToCart({{ $selectedProduct->id }})" class="modal-add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> ADD TO CART
+                                </button>
+                                <button wire:click="checkout" class="modal-checkout-btn">
+                                    <i class="fas fa-credit-card"></i> CHECKOUT
+                                </button>
+                            </div>
+                        @endif
 
                         <!-- Reviews Section -->
                         <div class="reviews-section">

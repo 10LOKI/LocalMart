@@ -71,7 +71,7 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        .nav-links a:not(.logo)::after {
+        .nav-links a:not(.logo):not(.profile-trigger)::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -92,6 +92,162 @@
 
         .nav-links .text-red-500:hover {
             opacity: 0.7;
+        }
+
+        /* Cart Badge */
+        .cart-link {
+            position: relative;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .profile-trigger:hover {
+            background: var(--soft-white);
+            border-color: rgba(42, 42, 42, 0.1);
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--sage));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--soft-white);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--charcoal);
+            letter-spacing: 0;
+        }
+
+        .profile-role {
+            font-size: 0.75rem;
+            color: var(--charcoal);
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 1rem);
+            right: 0;
+            background: var(--soft-white);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px var(--shadow);
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 1px solid rgba(42, 42, 42, 0.1);
+        }
+
+        .profile-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.1);
+        }
+
+        .dropdown-header-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-header-email {
+            font-size: 0.85rem;
+            color: var(--charcoal);
+            opacity: 0.6;
+        }
+
+        .dropdown-section {
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-section-title {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--charcoal);
+            opacity: 0.5;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--charcoal);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: var(--cream);
+            padding-left: 2rem;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            opacity: 0.6;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(42, 42, 42, 0.1);
+            margin: 0.5rem 0;
+        }
+
+        .dropdown-logout {
+            color: var(--terracotta);
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+        }
+
+        .dropdown-logout:hover {
+            background: rgba(201, 119, 87, 0.1);
         }
 
         /* Footer */
@@ -198,6 +354,9 @@
                 justify-content: center;
                 gap: 1rem;
             }
+            .profile-info {
+                display: none;
+            }
             .footer-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -220,12 +379,105 @@
             <a href="/products">PRODUCTS</a>
             <a href="/orders">ORDERS</a>
             <a href="/reviews">REVIEWS</a>
-            <a href="/cart">CART</a>
+            <a href="/cart" class="cart-link flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>CART</span>
+            </a>
             
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="text-red-500">LOGOUT</button>
-            </form>
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <div class="profile-trigger">
+                    <div class="profile-avatar">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </div>
+                    <div class="profile-info">
+                        <span class="profile-name">{{ auth()->user()->name }}</span>
+                        <span class="profile-role">
+                            @if(auth()->user()->hasRole('admin'))
+                                Admin
+                            @elseif(auth()->user()->hasRole('seller'))
+                                Seller
+                            @else
+                                Customer
+                            @endif
+                        </span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; opacity: 0.6;"></i>
+                </div>
+
+                <div class="dropdown-menu">
+                    <!-- User Info Header -->
+                    <div class="dropdown-header">
+                        <div class="dropdown-header-name">{{ auth()->user()->name }}</div>
+                        <div class="dropdown-header-email">{{ auth()->user()->email }}</div>
+                    </div>
+
+                    <!-- Account Section -->
+                    <div class="dropdown-section">
+                        <div class="dropdown-section-title">Account</div>
+                        <a href="/profile" class="dropdown-item">
+                            <i class="fa-solid fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+                        <a href="/orders" class="dropdown-item">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>My Orders</span>
+                        </a>
+                        <a href="/cart" class="dropdown-item">
+                            <i class="fa-solid fa-shopping-cart"></i>
+                            <span>Shopping Cart</span>
+                        </a>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+
+                    <!-- Role-Based Section -->
+                    @if(auth()->user()->hasRole('admin'))
+                    <div class="dropdown-section">
+                        <div class="dropdown-section-title">Admin</div>
+                        <a href="/categories" class="dropdown-item">
+                            <i class="fa-solid fa-tags"></i>
+                            <span>Manage Categories</span>
+                        </a>
+                        <a href="/dashboard" class="dropdown-item">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    @endif
+
+                    @if(auth()->user()->hasRole('seller'))
+                    <div class="dropdown-section">
+                        <div class="dropdown-section-title">Seller</div>
+                        <a href="/products" class="dropdown-item">
+                            <i class="fa-solid fa-box"></i>
+                            <span>My Products</span>
+                        </a>
+                        <a href="/products/create" class="dropdown-item">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>Add Product</span>
+                        </a>
+                        <a href="/orders" class="dropdown-item">
+                            <i class="fa-solid fa-truck"></i>
+                            <span>Manage Orders</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    @endif
+
+                    <!-- Logout -->
+                    <div class="dropdown-section">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item dropdown-logout">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         @else
         <div class="nav-links">

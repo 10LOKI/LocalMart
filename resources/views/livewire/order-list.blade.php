@@ -36,63 +36,38 @@
             font-weight: 300;
         }
 
-        .orders-card {
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .order-card {
             background: var(--soft-white);
-            padding: 3rem;
+            padding: 2rem;
             border-radius: 4px;
-            box-shadow: 0 4px 30px var(--shadow);
+            box-shadow: 0 2px 20px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
-        .orders-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 40px var(--shadow);
         }
 
-        .orders-table thead {
-            background: var(--cream);
-        }
-
-        .orders-table th {
-            padding: 1.25rem 1.5rem;
-            text-align: left;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--charcoal);
-            border-bottom: 2px solid rgba(42, 42, 42, 0.1);
-        }
-
-        .orders-table tbody tr {
-            border-bottom: 1px solid rgba(42, 42, 42, 0.05);
-            transition: background 0.3s;
-        }
-
-        .orders-table tbody tr:hover {
-            background: var(--cream);
-        }
-
-        .orders-table td {
-            padding: 1.5rem;
-            color: var(--charcoal);
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
         .order-number {
             font-weight: 600;
-            font-size: 1.05rem;
-            color: var(--charcoal);
-        }
-
-        .customer-name {
-            font-weight: 400;
-        }
-
-        .order-total {
-            font-family: 'Cormorant Garamond', serif;
             font-size: 1.25rem;
-            color: var(--gold);
-            font-weight: 500;
+            color: var(--charcoal);
         }
 
         .order-status {
@@ -120,28 +95,75 @@
             color: var(--charcoal);
         }
 
-        .btn-view {
-            color: var(--sage);
-            border: 1px solid var(--sage);
-            padding: 0.5rem 1.25rem;
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(42, 42, 42, 0.05);
+        }
+
+        .info-label {
             font-size: 0.85rem;
+            color: var(--charcoal);
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+
+        .customer-name {
+            font-size: 1.1rem;
+        }
+
+        .order-total {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .btn-view {
+            width: 100%;
+            color: var(--soft-white);
+            background: var(--sage);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
             font-weight: 500;
             text-decoration: none;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
         }
 
         .btn-view:hover {
-            background: var(--sage);
-            color: var(--soft-white);
+            background: var(--charcoal);
         }
 
         .empty-state {
+            grid-column: 1 / -1;
             text-align: center;
             padding: 6rem 2rem;
+            background: var(--soft-white);
+            border-radius: 4px;
+            box-shadow: 0 4px 30px var(--shadow);
         }
 
         .empty-icon {
@@ -170,23 +192,12 @@
                 padding: 2rem 1rem;
             }
 
-            .orders-card {
-                padding: 1.5rem;
-            }
-
             .orders-title {
                 font-size: 2rem;
             }
 
-            .orders-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .orders-table th,
-            .orders-table td {
-                padding: 1rem;
-                font-size: 0.9rem;
+            .orders-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -197,50 +208,51 @@
     <div class="orders-container">
         <div class="orders-header">
             <h1 class="orders-title">Orders</h1>
-            <p class="orders-subtitle">Manage all customer orders</p>
+            <p class="orders-subtitle">Manage all your orders</p>
         </div>
 
-        <div class="orders-card">
-            @if(count($orders) > 0)
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Order Number</th>
-                            <th>Customer</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th style="text-align: right;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($orders as $order)
-                        <tr>
-                            <td class="order-number">#{{ $order->order_number }}</td>
-                            <td class="customer-name">{{ $order->user->name }}</td>
-                            <td class="order-total">${{ number_format($order->total, 2) }}</td>
-                            <td>
-                                <span class="order-status status-{{ $order->status }}">
-                                    {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                                </span>
-                            </td>
-                            <td style="text-align: right;">
-                                <a href="/orders/{{ $order->id }}" class="btn-view">
-                                    <i class="fas fa-eye"></i> View Details
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
+        @if(count($orders) > 0)
+            <div class="orders-grid">
+                @foreach($orders as $order)
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <div class="order-number">#{{ $order->order_number }}</div>
+                            <span class="order-status status-{{ $order->status }}">
+                                {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                            </span>
+                        </div>
+
+                        <div class="order-info">
+                            <div class="info-row">
+                                <span class="info-label">Customer</span>
+                                <span class="info-value customer-name">{{ $order->user->name }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Total</span>
+                                <span class="order-total">${{ number_format($order->total, 2) }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Date</span>
+                                <span class="info-value">{{ $order->created_at->format('M d, Y') }}</span>
+                            </div>
+                        </div>
+
+                        <a href="/orders/{{ $order->id }}" class="btn-view">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="orders-grid">
                 <div class="empty-state">
                     <div class="empty-icon">
                         <i class="fas fa-receipt"></i>
                     </div>
                     <h3 class="empty-title">No Orders Yet</h3>
-                    <p class="empty-text">Orders will appear here once customers make purchases</p>
+                    <p class="empty-text">Orders will appear here once you make purchases</p>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 </div>
