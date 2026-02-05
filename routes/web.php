@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 
 // Routes admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () { return function (){echo "loki man";}; })->name('dashboard');
+    Route::get('/dashboard', function () { return view('back-office.index');})->name('dashboard');
     Route::get('/categories', CategoryList::class)->name('categories');
     Route::get('/categories/create', CategoryForm::class)->name('categories.create');
     Route::get('/categories/edit/{id}', CategoryForm::class)->name('categories.edit');
@@ -39,47 +39,22 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reviews', ReviewList::class)->name('reviews');
 });
 
-// Routes Manager
-Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
-    Route::get('/dashboard', function () { return view('manager.dashboard'); })->name('dashboard');
+// Routes Seller
+Route::middleware(['auth', 'role:seller'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/dashboard', function () { return view('seller.dashboard'); })->name('dashboard');
     Route::get('/products', ProductList::class)->name('products');
     Route::get('/products/create', ProductForm::class)->name('products.create');
     Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
 });
 
-// Routes USER
-Route::middleware(['auth', 'role:user'])->group(function () {
+// Routes Customer
+Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/categories', CategoryList::class)->name('categories');
     Route::get('/products', ProductList::class)->name('products');
     Route::get('/orders', OrderList::class)->name('orders');
     Route::get('/orders/{id}', OrderDetail::class)->name('orders.detail');
     Route::get('/reviews', ReviewList::class)->name('reviews');
     Route::get('/cart', CartPage::class)->name('cart');
-});
-
-require __DIR__.'/auth.php';
-Route::middleware('auth')->group(function () {
-
-    Route::get('/categories', CategoryList::class);
-
-Route::middleware('role:admin')->group(function () {
-    Route::get('/categories/create', CategoryForm::class);
-    Route::get('/categories/edit/{id}', CategoryForm::class);
-});
-
-    Route::get('/products', ProductList::class);
-
-Route::middleware('role:seller')->group(function () {
-    Route::get('/products/create', ProductForm::class);
-    Route::get('/products/edit/{id}', ProductForm::class);
-});
-
-    Route::get('/orders', OrderList::class);
-    Route::get('/orders/{id}', OrderDetail::class);
-
-    Route::get('/reviews', ReviewList::class);
-
-    Route::get('/cart', CartPage::class);
 });
 
 require __DIR__.'/auth.php';
