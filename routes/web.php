@@ -28,26 +28,26 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/categories', CategoryList::class);
+    Route::get('/categories', CategoryList::class)->name('categories.index');
 
-Route::middleware('role:admin')->group(function () {
-    Route::get('/categories/create', CategoryForm::class);
-    Route::get('/categories/edit/{id}', CategoryForm::class);
-});
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/categories/create', CategoryForm::class)->name('categories.create');
+        Route::get('/categories/edit/{id}', CategoryForm::class)->name('categories.edit');
+    });
 
-    Route::get('/products', ProductList::class);
+    Route::get('/products', ProductList::class)->name('products.index');
 
-Route::middleware('role:seller')->group(function () {    
-    Route::get('/products/create', ProductForm::class);
-    Route::get('/products/edit/{id}', ProductForm::class);
-});
+    Route::middleware('role:seller')->group(function () {    
+        Route::get('/products/create', ProductForm::class)->name('products.create');
+        Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
+    });
 
-    Route::get('/orders', OrderList::class);
-    Route::get('/orders/{id}', OrderDetail::class);
+    Route::get('/orders', OrderList::class)->name('orders.index');
+    Route::get('/orders/{id}', OrderDetail::class)->name('orders.show');
 
-    Route::get('/reviews', ReviewList::class);
+    Route::get('/reviews', ReviewList::class)->name('reviews.index');
 
-    Route::get('/cart', CartPage::class);
+    Route::get('/cart', CartPage::class)->name('cart');
 });
 
 require __DIR__.'/auth.php';

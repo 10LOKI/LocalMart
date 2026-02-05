@@ -7,24 +7,22 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Like;
 use App\Models\Review;
+use App\Models\Cart;
+use App\Models\Order;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class ProductList extends Component
 {
-
     public $search = '';
     public $selectedCategory = '';
     public $sortBy = 'newest';
     
-
     public $selectedProduct = null;
     public $showModal = false;
     
-
     public $newComment = '';
-    public $newRating = 5;
-
+    public $newRating = 0;
 
     public function delete($id)
     {
@@ -35,17 +33,14 @@ class ProductList extends Component
             session()->flash('message', 'Product deleted successfully!');
         }
     }
-
  
     public function render()
     {
         $query = Product::with(['category', 'seller', 'photos', 'likes', 'reviews']);
         
-
         if (auth()->user()->hasRole('seller')) {
             $query->where('seller_id', auth()->id());
         }
-
 
         if ($this->search) {
             $query->where(function($q) {
@@ -54,11 +49,9 @@ class ProductList extends Component
             });
         }
 
-
         if ($this->selectedCategory) {
             $query->where('category_id', $this->selectedCategory);
         }
-
     
         switch ($this->sortBy) {
             case 'price_low':
@@ -76,12 +69,11 @@ class ProductList extends Component
                 break;
         }
 
-        return view('livewire.product-list', [
+        return view('livewire.frontoffice.product-list', [
             'products' => $query->get(),
             'categories' => Category::all()
         ]);
     }
-
 
     public function preview($productId)
     {
@@ -97,14 +89,12 @@ class ProductList extends Component
         $this->resetComment();
     }
 
-
     public function closeModal()
     {
         $this->showModal = false;
         $this->selectedProduct = null;
         $this->resetComment();
     }
-
 
     public function toggleLike($productId)
     {
@@ -114,24 +104,20 @@ class ProductList extends Component
                     ->first();
 
         if ($like) {
-            
             $like->delete();
             session()->flash('message', 'Product removed from favorites!');
         } else {
-            
             Like::create([
                 'product_id' => $productId,
                 'user_id' => $userId
             ]);
             session()->flash('message', 'Product added to favorites!');
         }
-
        
         if ($this->selectedProduct && $this->selectedProduct->id == $productId) {
             $this->selectedProduct->load('likes');
         }
     }
-
 
     public function isLiked($productId)
     {
@@ -139,7 +125,6 @@ class ProductList extends Component
                    ->where('user_id', auth()->id())
                    ->exists();
     }
-
 
     public function submitComment()
     {
@@ -154,14 +139,12 @@ class ProductList extends Component
             'rating' => $this->newRating,
             'comment' => $this->newComment
         ]);
-
        
         $this->selectedProduct->load('reviews.user');
         
         session()->flash('message', 'Review submitted successfully!');
         $this->resetComment();
     }
-
 
     public function deleteComment($reviewId)
     {
@@ -174,13 +157,11 @@ class ProductList extends Component
         }
     }
 
-
     private function resetComment()
     {
         $this->newComment = '';
         $this->newRating = 5;
     }
-
 
     public function getAverageRating($product)
     {
@@ -188,5 +169,32 @@ class ProductList extends Component
             return 0;
         }
         return round($product->reviews->avg('rating'), 1);
+    }
+
+    public function addToCart($productId)
+    {
+   
+        $cart = auth()->user()->getOrCreateCart();
+
+        $item = $cart->items()
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($item) {
+          
+            $item->increment('quantity');
+            session()->flash('message', 'Product quantity updated in cart!');
+        } else {
+            
+            $product = Product::findOrFail($productId);
+
+            $cart->items()->create([
+                'product_id' => $product->id,
+                'quantity' => 1,
+                'price' => $product->price,
+            ]);
+            
+            session()->flash('message', 'Product added to cart!');
+        }
     }
 }

@@ -63,8 +63,9 @@
         }
 
         .info-item {
-            display: flex;
-            flex-direction: column;
+            background: var(--cream);
+            padding: 1.5rem;
+            border-radius: 4px;
         }
 
         .info-label {
@@ -74,18 +75,18 @@
             text-transform: uppercase;
             color: var(--charcoal);
             opacity: 0.6;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .info-value {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             color: var(--charcoal);
-            font-weight: 400;
+            font-weight: 500;
         }
 
         .info-value.total {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.75rem;
+            font-size: 2rem;
             color: var(--gold);
             font-weight: 500;
         }
@@ -173,54 +174,42 @@
             margin-bottom: 2rem;
         }
 
-        .order-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+        .items-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
-        .order-table thead {
+        .item-card {
             background: var(--cream);
-        }
-
-        .order-table th {
-            padding: 1.25rem 1.5rem;
-            text-align: left;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--charcoal);
-            border-bottom: 2px solid rgba(42, 42, 42, 0.1);
-        }
-
-        .order-table tbody tr {
-            border-bottom: 1px solid rgba(42, 42, 42, 0.05);
-            transition: background 0.3s;
-        }
-
-        .order-table tbody tr:hover {
-            background: var(--cream);
-        }
-
-        .order-table td {
             padding: 1.5rem;
-            color: var(--charcoal);
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 2rem;
+            align-items: center;
         }
 
         .product-name {
             font-weight: 500;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
+            color: var(--charcoal);
         }
 
         .product-price {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: var(--gold);
+            text-align: center;
         }
 
         .product-quantity {
-            font-weight: 500;
+            background: var(--soft-white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--charcoal);
+            text-align: center;
         }
 
         @media (max-width: 768px) {
@@ -250,14 +239,10 @@
                 width: 100%;
             }
 
-            .order-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .order-table th,
-            .order-table td {
-                padding: 1rem;
+            .item-card {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                text-align: center;
             }
         }
     </style>
@@ -310,24 +295,19 @@
             @endcan
 
             <h3 class="items-section-title">Order Items</h3>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->items as $item)
-                    <tr>
-                        <td class="product-name">{{ $item->product->name }}</td>
-                        <td class="product-price">${{ number_format($item->price, 2) }}</td>
-                        <td class="product-quantity">{{ $item->quantity }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="items-grid">
+                @foreach($order->items as $item)
+                    <div class="item-card">
+                        <div class="product-name">
+                            <i class="fas fa-box"></i> {{ $item->product->name }}
+                        </div>
+                        <div class="product-price">${{ number_format($item->price, 2) }}</div>
+                        <div class="product-quantity">
+                            Qty: {{ $item->quantity }}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </div>
