@@ -1057,6 +1057,7 @@
                             @endif
 
                             <!-- Like Button on Card -->
+                            @role('customer')
                             <button 
                                 wire:click.stop="toggleLike({{ $product->id }})" 
                                 class="like-btn {{ $this->isLiked($product->id) ? 'liked' : '' }}"
@@ -1064,7 +1065,7 @@
                             >
                                 <i class="fas fa-heart"></i>
                             </button>
-
+                            @endrole
                             <!-- Action Buttons (Edit/Delete for sellers) -->
                             <div class="action-buttons" onclick="event.stopPropagation()">
                                 @if(auth()->user()->hasRole('seller') && $product->seller_id == auth()->id())
@@ -1137,14 +1138,16 @@
                         </div>
                         
                         <!-- Like Button on Modal -->
+                        @role('customer')
                         <button 
                             wire:click="toggleLike({{ $selectedProduct->id }})" 
                             class="modal-like-btn {{ $this->isLiked($selectedProduct->id) ? 'liked' : '' }}"
                         >
                             <i class="fas fa-heart"></i>
                         </button>
+                        @endrole
                     </div>
-
+                    
                     <!-- Info Section -->
                     <div class="modal-info-section">
                         <div class="modal-category">{{ $selectedProduct->category->name ?? 'Uncategorized' }}</div>
@@ -1206,6 +1209,7 @@
                             </div>
 
                             <!-- Comment Form -->
+                            @role('customer')
                             <div class="comment-form">
                                 <div class="form-group">
                                     <label class="form-label">Your Rating</label>
@@ -1233,6 +1237,7 @@
                                     SUBMIT REVIEW
                                 </button>
                             </div>
+                            @endrole
 
                             <!-- Comments List -->
                             @if($selectedProduct->reviews->count() > 0)

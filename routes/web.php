@@ -50,4 +50,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', CartPage::class)->name('cart');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';    
