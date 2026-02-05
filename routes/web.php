@@ -9,7 +9,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     // TODO: add auth + role-based middleware here.
-    return view('dashboard.index');
+    return view('back-office.index');
 })->name('dashboard');
 
 Route::middleware('auth')->group(function () {
