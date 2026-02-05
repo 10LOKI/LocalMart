@@ -36,16 +36,16 @@ Route::middleware('role:admin')->group(function () {
 });
 
     Route::get('/products', ProductList::class);
+
+Route::middleware('role:seller')->group(function () {    
     Route::get('/products/create', ProductForm::class);
     Route::get('/products/edit/{id}', ProductForm::class);
-
+});
 
     Route::get('/orders', OrderList::class);
     Route::get('/orders/{id}', OrderDetail::class);
 
-
     Route::get('/reviews', ReviewList::class);
-
 
     Route::get('/cart', CartPage::class);
 });
