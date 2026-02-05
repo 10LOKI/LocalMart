@@ -72,8 +72,10 @@
                     @click="open = !open"
                     aria-label="Profile menu"
                 >
-                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">LM</span>
-                    <span class="hidden sm:block">Layla Monroe</span>
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'LM', 0, 2)) }}
+                    </span>
+                    <span class="hidden sm:block">{{ auth()->user()->name ?? 'LocalMart User' }}</span>
                     <svg class="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                         <path d="M6 9l6 6 6-6" />
                     </svg>
@@ -89,7 +91,12 @@
                     <div class="mt-2 space-y-1">
                         <a href="#" class="block rounded-lg px-2 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Profile</a>
                         <a href="#" class="block rounded-lg px-2 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Settings</a>
-                        <a href="#" class="block rounded-lg px-2 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50">Sign out</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full rounded-lg px-2 py-2 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50">
+                                Sign out
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
