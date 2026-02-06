@@ -1,126 +1,3 @@
-{{-- TODO: replace with real metric from DB --}}
-@php
-    $kpis = [
-        [
-            'title' => 'Revenue (This Month)',
-            'value' => '$84,230',
-            'change' => '+12.4%',
-            'changeType' => 'up',
-            'icon' => 'revenue',
-            'note' => 'Gross sales',
-        ],
-        [
-            'title' => 'New Orders',
-            'value' => '1,284',
-            'change' => '+8.1%',
-            'changeType' => 'up',
-            'icon' => 'orders',
-            'note' => 'Across all channels',
-        ],
-        [
-            'title' => 'Total Products',
-            'value' => '3,482',
-            'change' => '+3.2%',
-            'changeType' => 'up',
-            'icon' => 'products',
-            'note' => 'Active SKUs',
-        ],
-        [
-            'title' => 'Low Stock Items',
-            'value' => '64',
-            'change' => '-4.5%',
-            'changeType' => 'down',
-            'icon' => 'stock',
-            'note' => 'Needs reorder',
-        ],
-        [
-            'title' => 'New Reviews',
-            'value' => '312',
-            'change' => '+6.7%',
-            'changeType' => 'up',
-            'icon' => 'reviews',
-            'note' => 'Last 30 days',
-        ],
-    ];
-
-    $chartLabels = ['01', '05', '10', '15', '20', '25', '30'];
-
-    // TODO: replace with real recent orders
-    $recentOrders = [
-        [
-            'id' => 'LM-1048',
-            'customer' => 'Ava Morgan',
-            'date' => 'Feb 2, 2026',
-            'amount' => '$184.20',
-            'status' => 'paid',
-        ],
-        [
-            'id' => 'LM-1049',
-            'customer' => 'Liam Santos',
-            'date' => 'Feb 2, 2026',
-            'amount' => '$92.55',
-            'status' => 'pending',
-        ],
-        [
-            'id' => 'LM-1050',
-            'customer' => 'Noah Hill',
-            'date' => 'Feb 1, 2026',
-            'amount' => '$248.10',
-            'status' => 'delivered',
-        ],
-        [
-            'id' => 'LM-1051',
-            'customer' => 'Mia Chen',
-            'date' => 'Feb 1, 2026',
-            'amount' => '$61.40',
-            'status' => 'paid',
-        ],
-        [
-            'id' => 'LM-1052',
-            'customer' => 'Ethan Cole',
-            'date' => 'Jan 31, 2026',
-            'amount' => '$133.90',
-            'status' => 'cancelled',
-        ],
-    ];
-
-    // TODO: replace with real order status breakdown
-    $statusBreakdown = [
-        ['label' => 'Pending', 'value' => 18, 'color' => '#f59e0b'],
-        ['label' => 'Paid', 'value' => 42, 'color' => '#38bdf8'],
-        ['label' => 'Delivered', 'value' => 31, 'color' => '#22c55e'],
-        ['label' => 'Cancelled', 'value' => 9, 'color' => '#f43f5e'],
-    ];
-    $statusTotal = array_sum(array_column($statusBreakdown, 'value'));
-    $statusVariants = [
-        'pending' => 'warning',
-        'paid' => 'info',
-        'delivered' => 'success',
-        'cancelled' => 'danger',
-    ];
-
-    // TODO: replace with real low stock data
-    $stockAlerts = [
-        ['product' => 'Organic Maple Granola', 'stock' => 12, 'sku' => 'LM-OG-112'],
-        ['product' => 'Cold Brew Concentrate', 'stock' => 8, 'sku' => 'LM-CB-209'],
-        ['product' => 'Ceramic Pour-Over Kit', 'stock' => 6, 'sku' => 'LM-CK-057'],
-        ['product' => 'Almond Protein Bars', 'stock' => 14, 'sku' => 'LM-AP-443'],
-    ];
-
-    // TODO: replace with real activity feed data
-    $activities = [
-        ['title' => 'New order created', 'detail' => 'Order LM-1053 from Ethan Cole', 'time' => '10 min ago', 'type' => 'order'],
-        ['title' => 'Order status updated', 'detail' => 'LM-1046 marked as delivered', 'time' => '35 min ago', 'type' => 'status'],
-        ['title' => 'New review added', 'detail' => '5-star review on Almond Protein Bars', 'time' => '1 hour ago', 'type' => 'review'],
-        ['title' => 'Product updated', 'detail' => 'Pricing refreshed for Cold Brew Concentrate', 'time' => '2 hours ago', 'type' => 'product'],
-    ];
-
-    $salesSeries = [
-        'thisMonth' => [12, 18, 16, 24, 22, 28, 30, 26, 34, 38, 32, 40],
-        'lastMonth' => [10, 14, 12, 18, 20, 22, 24, 21, 27, 30, 28, 31],
-    ];
-@endphp
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -345,70 +222,78 @@
                             <x-chart-card title="Stock Alerts" subtitle="Low inventory items">
                                 {{-- TODO: gate this section by role/permission --}}
                                 <div class="space-y-4">
-                                    @foreach ($stockAlerts as $item)
-                                        @php
-                                            $isCritical = $item['stock'] <= 10;
-                                            $badgeText = $isCritical ? 'Critical' : 'Low';
-                                            $badgeVariant = $isCritical ? 'danger' : 'warning';
-                                        @endphp
-                                        <x-list-item
-                                            title="{{ $item['product'] }}"
-                                            subtitle="SKU {{ $item['sku'] }}"
-                                            meta="{{ $item['stock'] }} left"
-                                        >
-                                            <x-slot name="icon">
-                                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                                                    <path d="M12 3l9 16H3L12 3Z" />
-                                                    <path d="M12 9v4" />
-                                                    <circle cx="12" cy="17" r="1" />
-                                                </svg>
-                                            </x-slot>
-                                            <x-status-badge variant="{{ $badgeVariant }}" size="xs">{{ $badgeText }}</x-status-badge>
-                                        </x-list-item>
-                                    @endforeach
+                                    @if (count($stockAlerts))
+                                        @foreach ($stockAlerts as $item)
+                                            @php
+                                                $isCritical = $item['stock'] <= 10;
+                                                $badgeText = $isCritical ? 'Critical' : 'Low';
+                                                $badgeVariant = $isCritical ? 'danger' : 'warning';
+                                            @endphp
+                                            <x-list-item
+                                                title="{{ $item['product'] }}"
+                                                subtitle="Category {{ $item['category'] }}"
+                                                meta="{{ $item['stock'] }} left"
+                                            >
+                                                <x-slot name="icon">
+                                                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                                        <path d="M12 3l9 16H3L12 3Z" />
+                                                        <path d="M12 9v4" />
+                                                        <circle cx="12" cy="17" r="1" />
+                                                    </svg>
+                                                </x-slot>
+                                                <x-status-badge variant="{{ $badgeVariant }}" size="xs">{{ $badgeText }}</x-status-badge>
+                                            </x-list-item>
+                                        @endforeach
+                                    @else
+                                        <p class="text-sm text-slate-500">No low stock items yet.</p>
+                                    @endif
                                 </div>
                             </x-chart-card>
 
                             <x-chart-card title="Recent Activities" subtitle="Latest store updates">
                                 {{-- TODO: gate this section by role/permission --}}
                                 <div class="space-y-4">
-                                    @foreach ($activities as $activity)
-                                        <x-list-item
-                                            title="{{ $activity['title'] }}"
-                                            subtitle="{{ $activity['detail'] }}"
-                                            meta="{{ $activity['time'] }}"
-                                        >
-                                            <x-slot name="icon">
-                                                @switch($activity['type'])
-                                                    @case('order')
-                                                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                                                            <path d="M6 6h14l-1.5 9H6L4 4H2" />
-                                                            <circle cx="9" cy="20" r="1.5" />
-                                                            <circle cx="18" cy="20" r="1.5" />
-                                                        </svg>
-                                                        @break
-                                                    @case('status')
-                                                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                                                            <path d="M6 12l4 4 8-8" />
-                                                            <path d="M20 12a8 8 0 1 1-4-6" />
-                                                        </svg>
-                                                        @break
-                                                    @case('review')
-                                                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                                                            <path d="M12 3l2.8 5.6 6.2.9-4.5 4.3 1 6.1-5.5-2.9-5.5 2.9 1-6.1L3 9.5l6.2-.9L12 3Z" />
-                                                        </svg>
-                                                        @break
-                                                    @case('product')
-                                                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                                                            <path d="M4 7l8-4 8 4v10l-8 4-8-4V7Z" />
-                                                            <path d="M4 7l8 4 8-4" />
-                                                        </svg>
-                                                        @break
-                                                @endswitch
-                                            </x-slot>
-                                            <span class="text-xs font-semibold text-slate-400">{{ $activity['time'] }}</span>
-                                        </x-list-item>
-                                    @endforeach
+                                    @if (count($activities))
+                                        @foreach ($activities as $activity)
+                                            <x-list-item
+                                                title="{{ $activity['title'] }}"
+                                                subtitle="{{ $activity['detail'] }}"
+                                                meta="{{ $activity['time'] }}"
+                                            >
+                                                <x-slot name="icon">
+                                                    @switch($activity['type'])
+                                                        @case('order')
+                                                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                                                <path d="M6 6h14l-1.5 9H6L4 4H2" />
+                                                                <circle cx="9" cy="20" r="1.5" />
+                                                                <circle cx="18" cy="20" r="1.5" />
+                                                            </svg>
+                                                            @break
+                                                        @case('status')
+                                                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                                                <path d="M6 12l4 4 8-8" />
+                                                                <path d="M20 12a8 8 0 1 1-4-6" />
+                                                            </svg>
+                                                            @break
+                                                        @case('review')
+                                                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                                                <path d="M12 3l2.8 5.6 6.2.9-4.5 4.3 1 6.1-5.5-2.9-5.5 2.9 1-6.1L3 9.5l6.2-.9L12 3Z" />
+                                                            </svg>
+                                                            @break
+                                                        @case('product')
+                                                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                                                <path d="M4 7l8-4 8 4v10l-8 4-8-4V7Z" />
+                                                                <path d="M4 7l8 4 8-4" />
+                                                            </svg>
+                                                            @break
+                                                    @endswitch
+                                                </x-slot>
+                                                <span class="text-xs font-semibold text-slate-400">{{ $activity['time'] }}</span>
+                                            </x-list-item>
+                                        @endforeach
+                                    @else
+                                        <p class="text-sm text-slate-500">No recent activity yet.</p>
+                                    @endif
                                 </div>
                             </x-chart-card>
                         </div>
@@ -417,19 +302,27 @@
                             <x-chart-card title="Recent Orders" subtitle="Latest transactions">
                                 {{-- TODO: gate this section by role/permission --}}
                                 <x-table :headers="['Order', 'Customer', 'Date', 'Amount', 'Status']">
-                                    @foreach ($recentOrders as $order)
-                                        <tr class="hover:bg-slate-50">
-                                            <td class="px-4 py-3 text-xs font-semibold text-slate-500">{{ $order['id'] }}</td>
-                                            <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ $order['customer'] }}</td>
-                                            <td class="px-4 py-3 text-xs text-slate-500">{{ $order['date'] }}</td>
-                                            <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ $order['amount'] }}</td>
-                                            <td class="px-4 py-3">
-                                                <x-status-badge variant="{{ $statusVariants[$order['status']] ?? 'neutral' }}" size="xs">
-                                                    {{ ucfirst($order['status']) }}
-                                                </x-status-badge>
+                                    @if (count($recentOrders))
+                                        @foreach ($recentOrders as $order)
+                                            <tr class="hover:bg-slate-50">
+                                                <td class="px-4 py-3 text-xs font-semibold text-slate-500">{{ $order['id'] }}</td>
+                                                <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ $order['customer'] }}</td>
+                                                <td class="px-4 py-3 text-xs text-slate-500">{{ $order['date'] }}</td>
+                                                <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ $order['amount'] }}</td>
+                                                <td class="px-4 py-3">
+                                                    <x-status-badge variant="{{ $statusVariants[$order['status']] ?? 'neutral' }}" size="xs">
+                                                        {{ ucfirst(str_replace('_', ' ', $order['status'])) }}
+                                                    </x-status-badge>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                                                No orders yet.
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </x-table>
                                 <div class="mt-4 flex justify-end">
                                     <button class="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900">

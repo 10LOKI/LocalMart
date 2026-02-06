@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
 use App\Livewire\CategoryForm;
@@ -15,17 +16,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    $role = auth()->user()->role ?? 'customer';
-    return redirect()->route($role . '.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 //des routes qui redirigent selon les roles
 Route::middleware('auth')->group(function () {
-    Route::get('/products', function () {
-        $role = auth()->user()->role ?? 'customer';
-        return redirect()->route($role . '.products');
-    });
-
     Route::get('/categories', CategoryList::class)->name('categories.index');
 
     Route::middleware('role:admin')->group(function () {
