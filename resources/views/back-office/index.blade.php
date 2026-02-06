@@ -137,10 +137,10 @@
     </head>
     <body class="min-h-screen font-['Manrope'] text-slate-900 antialiased">
         <div x-data="{ sidebarOpen: false }" class="relative min-h-screen bg-slate-50 [background-image:radial-gradient(900px_circle_at_8%_0%,rgba(56,189,248,0.12),transparent_55%),radial-gradient(800px_circle_at_92%_18%,rgba(249,115,22,0.12),transparent_55%)] lg:flex">
-            @include('dashboard.partials.sidebar')
+            @include('back-office.partials.sidebar')
 
             <div class="flex-1 min-w-0">
-                @include('dashboard.partials.navbar')
+                @include('back-office.partials.navbar')
 
                 <main class="px-6 pb-12 pt-0 lg:px-10">
                     <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">

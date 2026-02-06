@@ -16,17 +16,15 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $role = auth()->user()->role ?? 'customer';
+    return redirect()->route($role . '.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+//des routes qui redirigent selon les roles
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
-Route::middleware('auth')->group(function () {
+    Route::get('/products', function () {
+        $role = auth()->user()->role ?? 'customer';
+        return redirect()->route($role . '.products');
+    });
 
     Route::get('/categories', CategoryList::class)->name('categories.index');
 
