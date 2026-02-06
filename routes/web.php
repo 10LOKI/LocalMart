@@ -16,16 +16,18 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $role = auth()->user()->role ?? 'customer';
-    return redirect()->route($role . '.dashboard');
+    $user = auth()->user();
+
+    if ($user && $user->hasRole(['admin', 'seller', 'moderator', 'manager'])) {
+        return view('back-office.index');
+    }
+
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 //des routes qui redirigent selon les roles
 Route::middleware('auth')->group(function () {
-    Route::get('/products', function () {
-        $role = auth()->user()->role ?? 'customer';
-        return redirect()->route($role . '.products');
-    });
-
     Route::get('/categories', CategoryList::class)->name('categories.index');
 
     Route::middleware('role:admin')->group(function () {
@@ -35,7 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products', ProductList::class)->name('products.index');
 
-    Route::middleware('role:seller')->group(function () {    
+    Route::middleware('role:seller')->group(function () {
         Route::get('/products/create', ProductForm::class)->name('products.create');
         Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
     });
@@ -48,4 +50,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', CartPage::class)->name('cart');
 });
 
-require __DIR__.'/auth.php';    
+require __DIR__.'/auth.php';
