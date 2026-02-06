@@ -96,6 +96,17 @@ Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice'
         Route::get('/roles', function () {
             return view('back-office.roles');
         })->name('roles.index');
+
+        Route::get('/notifications', function ()
+        {
+            return view('back-office.notifications');
+        }) -> name('notifications.index');
+
+        //payements
+        Route::get('/payements' , function ()
+        {
+            return view('back-office.paiements');
+        }) -> name('payements.index');
     });
 });
 require __DIR__.'/auth.php';

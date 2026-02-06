@@ -81,7 +81,7 @@
                         </svg>
                         Roles &amp; Permissions
                     </a>
-                    <a href="#" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                    <a href="{{route('backoffice.notifications.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M15 17h5l-1.4-2.5a3 3 0 0 1 .1-3l1.3-2.5h-5" />
                             <path d="M4 7h11v10H4z" />
@@ -94,7 +94,7 @@
             <div>
                 <p class="px-3 text-[11px] uppercase tracking-[0.3em] text-slate-400">Operations</p>
                 <div class="mt-3 space-y-1">
-                    <a href="#" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                    <a href="{{route('backoffice.payements.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <rect x="3" y="6" width="18" height="12" rx="2" />
                             <path d="M3 10h18" />
