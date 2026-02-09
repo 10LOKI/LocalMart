@@ -24,6 +24,9 @@ class ProductList extends Component
     public $newComment = '';
     public $newRating = 0;
 
+    public $quantity = 1;
+
+
     public function delete($id)
     {
         $product = Product::find($id);
@@ -84,7 +87,7 @@ class ProductList extends Component
             'reviews.user',
             'likes'
         ])->findOrFail($productId);
-        
+        $this->quantity = 1;
         $this->showModal = true;
         $this->resetComment();
     }
@@ -175,14 +178,14 @@ class ProductList extends Component
     {
    
         $cart = auth()->user()->getOrCreateCart();
-
+                
         $item = $cart->items()
             ->where('product_id', $productId)
             ->first();
 
         if ($item) {
           
-            $item->increment('quantity');
+             $item->increment('quantity', $this->quantity);
             session()->flash('message', 'Product quantity updated in cart!');
         } else {
             
@@ -190,7 +193,7 @@ class ProductList extends Component
 
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => 1,
+                'quantity' => $this->quantity,
                 'price' => $product->price,
             ]);
             

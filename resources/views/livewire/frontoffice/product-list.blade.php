@@ -189,17 +189,17 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.5rem;
             font-weight: 300;
-            color: var(--charcoal);
+            letter-spacing: 1px;
         }
 
-        .product-count {
-            font-size: 1rem;
+        .results-count {
+            font-size: 0.95rem;
             color: var(--charcoal);
             opacity: 0.6;
-            font-weight: 300;
         }
 
-        .product-grid {
+        /* Product Grid */
+        .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2.5rem;
@@ -212,97 +212,72 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
-            animation: fadeIn 0.6s ease-out both;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .product-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px var(--shadow);
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            background: var(--cream);
         }
 
         .product-image {
             width: 100%;
-            height: 350px;
-            overflow: hidden;
-            position: relative;
-            background: var(--cream);
-        }
-
-        .product-image img {
-            width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s ease;
         }
 
-        .product-card:hover .product-image img {
+        .product-card:hover .product-image {
             transform: scale(1.08);
         }
 
         .product-badge {
             position: absolute;
             top: 1rem;
-            left: 1rem;
-            padding: 0.4rem 1rem;
+            right: 1rem;
+            background: var(--gold);
+            color: var(--charcoal);
+            padding: 0.4rem 0.8rem;
             font-size: 0.75rem;
             font-weight: 500;
             letter-spacing: 1px;
             border-radius: 2px;
-            z-index: 2;
         }
 
-        .stock-badge {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .action-buttons {
+        .like-btn {
             position: absolute;
             top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-            z-index: 3;
-        }
-
-        .product-card:hover .action-buttons {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .action-btn {
+            left: 1rem;
+            background: var(--soft-white);
+            color: var(--charcoal);
             width: 40px;
             height: 40px;
-            background: var(--soft-white);
-            border: none;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
             cursor: pointer;
             transition: all 0.3s;
-            color: var(--charcoal);
-            text-decoration: none;
+            z-index: 10;
         }
 
-        .action-btn:hover {
-            background: var(--gold);
-            color: white;
+        .like-btn:hover {
+            background: var(--terracotta);
+            color: var(--soft-white);
             transform: scale(1.1);
+        }
+
+        .like-btn.liked {
+            background: var(--terracotta);
+            color: var(--soft-white);
         }
 
         .product-info {
@@ -311,241 +286,162 @@
 
         .product-category {
             font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            color: var(--gold);
+            color: var(--charcoal);
+            opacity: 0.6;
+            letter-spacing: 2px;
             margin-bottom: 0.5rem;
         }
 
         .product-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 400;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             color: var(--charcoal);
-            line-height: 1.3;
         }
 
         .product-description {
             font-size: 0.9rem;
-            line-height: 1.6;
             color: var(--charcoal);
             opacity: 0.7;
             margin-bottom: 1rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .product-footer {
+        .product-meta {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(42, 42, 42, 0.1);
-        }
-
-        .card-actions {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .view-btn, .add-to-cart-btn {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .view-btn {
-            background: var(--charcoal);
-            color: var(--cream);
-        }
-
-        .view-btn:hover {
-            background: var(--gold);
-            color: var(--charcoal);
-        }
-
-        .add-to-cart-btn {
-            background: var(--sage);
-            color: var(--soft-white);
-            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .add-to-cart-btn:hover {
-            background: var(--terracotta);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .modal-add-to-cart-btn, .modal-checkout-btn {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .modal-add-to-cart-btn {
-            background: var(--sage);
-            color: var(--soft-white);
-        }
-
-        .modal-add-to-cart-btn:hover {
-            background: var(--terracotta);
-        }
-
-        .modal-checkout-btn {
-            background: var(--gold);
-            color: var(--charcoal);
-        }
-
-        .modal-checkout-btn:hover {
-            background: var(--charcoal);
-            color: var(--cream);
+            margin-bottom: 1rem;
         }
 
         .product-price {
-            font-size: 1.75rem;
-            font-weight: 400;
+            font-size: 1.4rem;
+            font-weight: 500;
             color: var(--charcoal);
         }
 
-        .stock-info {
+        .product-stats {
+            display: flex;
+            gap: 1rem;
             font-size: 0.85rem;
-            color: var(--sage);
-            font-weight: 500;
+            color: var(--charcoal);
+            opacity: 0.6;
         }
 
-        .stock-low {
-            color: var(--terracotta);
-            opacity: 1;
-            font-weight: 500;
-        }
-
-        /* Like Button on Card */
-        .like-btn {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            background: var(--soft-white);
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
+        .product-stat {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--charcoal);
+            background: transparent;
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px var(--shadow);
-            z-index: 2;
         }
 
-        .like-btn:hover {
-            transform: scale(1.1);
+        .action-btn:hover {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
+        .action-btn.primary {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .action-btn.danger {
+            border-color: var(--terracotta);
+            color: var(--terracotta);
+        }
+
+        .action-btn.danger:hover {
             background: var(--terracotta);
-            color: white;
-        }
-
-        .like-btn.liked {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .like-btn i {
-            font-size: 1.1rem;
+            color: var(--soft-white);
         }
 
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(42, 42, 42, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 9998;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 9998;
             padding: 2rem;
-            animation: fadeInOverlay 0.3s ease-out;
+            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-container {
             background: var(--soft-white);
-            border-radius: 8px;
-            max-width: 1100px;
+            border-radius: 4px;
+            max-width: 1200px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            position: relative;
-            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes scaleIn {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: scale(0.9) translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translateY(0);
             }
         }
 
         .modal-close {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: var(--charcoal);
-            color: var(--cream);
+            top: 1rem;
+            right: 1rem;
+            background: var(--soft-white);
             border: none;
-            border-radius: 50%;
             width: 40px;
             height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-size: 1.2rem;
             transition: all 0.3s;
             z-index: 10;
         }
 
         .modal-close:hover {
-            background: var(--gold);
+            background: var(--terracotta);
+            color: var(--soft-white);
             transform: rotate(90deg);
         }
 
@@ -553,7 +449,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
-            padding: 3rem;
+            padding: 2rem;
         }
 
         .modal-image-section {
@@ -562,7 +458,7 @@
 
         .modal-image {
             width: 100%;
-            height: 500px;
+            height: 600px;
             border-radius: 4px;
             overflow: hidden;
             background: var(--cream);
@@ -577,33 +473,30 @@
         .modal-like-btn {
             position: absolute;
             top: 1rem;
-            right: 1rem;
+            left: 1rem;
             background: var(--soft-white);
-            border: none;
-            border-radius: 50%;
+            color: var(--charcoal);
             width: 50px;
             height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-size: 1.2rem;
             transition: all 0.3s;
-            box-shadow: 0 4px 20px var(--shadow);
         }
 
         .modal-like-btn:hover {
-            transform: scale(1.1);
             background: var(--terracotta);
-            color: white;
+            color: var(--soft-white);
+            transform: scale(1.1);
         }
 
         .modal-like-btn.liked {
             background: var(--terracotta);
-            color: white;
-        }
-
-        .modal-like-btn i {
-            font-size: 1.3rem;
+            color: var(--soft-white);
         }
 
         .modal-info-section {
@@ -613,26 +506,25 @@
 
         .modal-category {
             font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            color: var(--gold);
+            letter-spacing: 2px;
+            color: var(--charcoal);
+            opacity: 0.6;
             margin-bottom: 0.5rem;
         }
 
         .modal-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.5rem;
-            font-weight: 400;
+            font-weight: 300;
             margin-bottom: 1rem;
             color: var(--charcoal);
-            line-height: 1.2;
         }
 
         .modal-price {
             font-size: 2rem;
             font-weight: 500;
-            color: var(--charcoal);
-            margin-bottom: 1rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
         }
 
         .modal-description {
@@ -640,43 +532,141 @@
             line-height: 1.8;
             color: var(--charcoal);
             opacity: 0.8;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(42, 42, 42, 0.1);
+            margin-bottom: 2rem;
         }
 
         .modal-meta {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 4px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--charcoal);
+            opacity: 0.6;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        /* Quantity Selector Styles */
+        .quantity-selector {
+            margin-bottom: 2rem;
+        }
+
+        .quantity-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--charcoal);
+            opacity: 0.7;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(42, 42, 42, 0.2);
+            background: var(--cream);
+            color: var(--charcoal);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: var(--charcoal);
+            color: var(--cream);
+            border-color: var(--charcoal);
+        }
+
+        .quantity-input {
+            width: 80px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid rgba(42, 42, 42, 0.2);
+            background: var(--soft-white);
+            color: var(--charcoal);
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            border-radius: 4px;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .modal-actions {
+            display: flex;
             gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .meta-item {
-            background: var(--cream);
+        .modal-add-to-cart-btn,
+        .modal-checkout-btn {
+            flex: 1;
             padding: 1rem;
-            border-radius: 4px;
-        }
-
-        .meta-label {
-            font-size: 0.8rem;
-            font-weight: 500;
+            border: none;
+            font-size: 0.85rem;
             letter-spacing: 1px;
-            color: var(--charcoal);
-            opacity: 0.6;
-            margin-bottom: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .meta-value {
-            font-size: 1.1rem;
-            font-weight: 500;
+        .modal-add-to-cart-btn {
+            background: var(--charcoal);
+            color: var(--cream);
+        }
+
+        .modal-add-to-cart-btn:hover {
+            background: var(--gold);
             color: var(--charcoal);
+        }
+
+        .modal-checkout-btn {
+            background: var(--sage);
+            color: var(--soft-white);
+        }
+
+        .modal-checkout-btn:hover {
+            background: var(--terracotta);
         }
 
         /* Reviews Section */
         .reviews-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
+            margin-top: 3rem;
+            padding-top: 3rem;
             border-top: 1px solid rgba(42, 42, 42, 0.1);
         }
 
@@ -684,14 +674,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .reviews-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--charcoal);
+            font-size: 1.8rem;
+            font-weight: 300;
         }
 
         .rating-summary {
@@ -715,7 +704,6 @@
             font-size: 0.9rem;
             color: var(--charcoal);
             opacity: 0.6;
-            margin-left: 0.5rem;
         }
 
         /* Comment Form */
@@ -727,28 +715,29 @@
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--charcoal);
-            margin-bottom: 0.5rem;
             display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            color: var(--charcoal);
+            opacity: 0.7;
         }
 
         .rating-input {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 1rem;
         }
 
         .star-btn {
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: #ddd;
+            color: rgba(42, 42, 42, 0.2);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -761,16 +750,15 @@
 
         .comment-textarea {
             width: 100%;
-            padding: 1rem;
+            min-height: 100px;
+            padding: 0.75rem;
             border: 1px solid rgba(42, 42, 42, 0.2);
             background: var(--soft-white);
             color: var(--charcoal);
-            font-size: 0.95rem;
             font-family: 'Outfit', sans-serif;
-            border-radius: 4px;
+            font-size: 0.95rem;
             resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s;
+            border-radius: 4px;
         }
 
         .comment-textarea:focus {
@@ -781,11 +769,9 @@
         .submit-btn {
             background: var(--charcoal);
             color: var(--cream);
-            border: none;
             padding: 0.75rem 2rem;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            border: none;
+            font-size: 0.85rem;
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s;
@@ -793,38 +779,39 @@
 
         .submit-btn:hover {
             background: var(--gold);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow);
+            color: var(--charcoal);
         }
 
         /* Comments List */
         .comments-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
+            gap: 1.5rem;
         }
 
         .comment-item {
             background: var(--cream);
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 4px;
-            position: relative;
         }
 
         .comment-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .comment-author {
             font-weight: 500;
             color: var(--charcoal);
-            font-size: 0.95rem;
+            margin-right: 0.5rem;
+        }
+
+        .comment-date {
+            font-size: 0.85rem;
+            color: var(--charcoal);
+            opacity: 0.5;
         }
 
         .comment-rating {
@@ -832,38 +819,30 @@
             font-size: 0.9rem;
         }
 
-        .comment-date {
-            font-size: 0.8rem;
+        .delete-comment-btn {
+            background: transparent;
+            border: none;
+            color: var(--terracotta);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .delete-comment-btn:hover {
             color: var(--charcoal);
-            opacity: 0.5;
-            margin-left: 0.5rem;
         }
 
         .comment-text {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             line-height: 1.6;
             color: var(--charcoal);
             opacity: 0.8;
         }
 
-        .delete-comment-btn {
-            background: none;
-            border: none;
-            color: var(--terracotta);
-            cursor: pointer;
-            font-size: 0.85rem;
-            padding: 0.3rem;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .delete-comment-btn:hover {
-            opacity: 1;
-        }
-
         .empty-comments {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             color: var(--charcoal);
             opacity: 0.5;
             font-style: italic;
@@ -875,13 +854,14 @@
             padding: 6rem 2rem;
         }
 
-        .empty-icon {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--charcoal);
+            opacity: 0.2;
+            margin-bottom: 1.5rem;
         }
 
-        .empty-title {
+        .empty-state-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2rem;
             font-weight: 300;
@@ -889,100 +869,48 @@
             color: var(--charcoal);
         }
 
-        .empty-text {
+        .empty-state-text {
             font-size: 1rem;
             color: var(--charcoal);
             opacity: 0.6;
         }
 
-        /* Success/Error Messages */
-        .flash-message {
-            position: fixed;
-            top: 100px;
-            right: 2rem;
-            background: var(--sage);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 4px;
-            box-shadow: 0 10px 40px var(--shadow);
-            animation: slideInRight 0.3s ease-out;
-            z-index: 10000;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
         /* Responsive */
+        @media (max-width: 1024px) {
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-image {
+                height: 400px;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
             }
+
             .filters-container {
                 flex-direction: column;
-                gap: 1rem;
             }
-            .product-grid {
+
+            .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 1.5rem;
             }
-            .products-section,
-            .filters-section {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-            .modal-content {
+
+            .modal-meta {
                 grid-template-columns: 1fr;
-                padding: 2rem;
-                gap: 2rem;
             }
-            .modal-image {
-                height: 300px;
-            }
-        }
-
-        /* Loading State */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        /* Wire Loading Indicator */
-        [wire\:loading] {
-            opacity: 0.6;
-        }
-
-        /* Scrollbar Styling */
-        .comments-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .comments-list::-webkit-scrollbar-track {
-            background: var(--cream);
-            border-radius: 3px;
-        }
-
-        .comments-list::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
         }
     </style>
-
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Hero Section -->
     <div class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Our Collection</h1>
-            <p class="hero-subtitle">Discover handpicked products crafted with care</p>
+            <h1 class="hero-title">Curated Collection</h1>
+            <p class="hero-subtitle">Discover timeless pieces for modern living</p>
         </div>
     </div>
 
@@ -990,17 +918,17 @@
     <div class="filters-section">
         <div class="filters-container">
             <div class="filter-group">
-                <div class="filter-label">SEARCH</div>
+                <label class="filter-label">SEARCH</label>
                 <input 
                     type="text" 
-                    class="search-input" 
-                    placeholder="Search products..."
-                    wire:model.live="search"
+                    wire:model.live="search" 
+                    placeholder="Search products..." 
+                    class="search-input"
                 >
             </div>
             <div class="filter-group">
-                <div class="filter-label">CATEGORY</div>
-                <select class="filter-select" wire:model.live="selectedCategory">
+                <label class="filter-label">CATEGORY</label>
+                <select wire:model.live="selectedCategory" class="filter-select">
                     <option value="">All Categories</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -1008,102 +936,83 @@
                 </select>
             </div>
             <div class="filter-group">
-                <div class="filter-label">SORT BY</div>
-                <select class="filter-select" wire:model.live="sortBy">
-                    <option value="newest">Newest First</option>
+                <label class="filter-label">SORT BY</label>
+                <select wire:model.live="sortBy" class="filter-select">
+                    <option value="newest">Newest</option>
                     <option value="price_low">Price: Low to High</option>
                     <option value="price_high">Price: High to Low</option>
-                    <option value="name">Name A-Z</option>
+                    <option value="name">Name</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <!-- Flash Message -->
-    @if (session()->has('message'))
-        <div class="flash-message" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-            {{ session('message') }}
-        </div>
-    @endif
-
     <!-- Products Section -->
     <div class="products-section">
         <div class="section-header">
-            <h2 class="section-title">
-                @if($selectedCategory)
-                    {{ $categories->find($selectedCategory)->name ?? 'Products' }}
-                @else
-                    All Products
-                @endif
-            </h2>
-            <div class="product-count">{{ count($products) }} {{ Str::plural('product', count($products)) }}</div>
+            <h2 class="section-title">Products</h2>
+            <span class="results-count">{{ $products->count() }} {{ $products->count() == 1 ? 'Product' : 'Products' }}</span>
         </div>
 
-        @if(count($products) > 0)
-            <div class="product-grid">
-                @foreach($products as $index => $product)
-                    <div class="product-card" style="animation-delay: {{ $index * 0.05 }}s" wire:click="preview({{ $product->id }})">
-                        <div class="product-image">
+        @if($products->count() > 0)
+            <div class="products-grid">
+                @foreach($products as $product)
+                    <div class="product-card" wire:click="preview({{ $product->id }})">
+                        <div class="product-image-container">
                             @if($product->photos && $product->photos->count() > 0)
-                                <img src="{{ Storage::url($product->photos->first()->image) }}" alt="{{ $product->name }}">
+                                <img src="{{ Storage::url($product->photos->first()->image) }}" alt="{{ $product->name }}" class="product-image">
                             @else
-                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="{{ $product->name }}">
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80" alt="{{ $product->name }}" class="product-image">
                             @endif
                             
-                            @if($product->stock < 10 && $product->stock > 0)
-                                <span class="product-badge stock-badge">LOW STOCK</span>
-                            @elseif($product->stock == 0)
-                                <span class="product-badge stock-badge">OUT OF STOCK</span>
+                            @if($product->stock < 10)
+                                <div class="product-badge">LOW STOCK</div>
                             @endif
 
-                            <!-- Like Button on Card -->
                             @role('customer')
                             <button 
                                 wire:click.stop="toggleLike({{ $product->id }})" 
                                 class="like-btn {{ $this->isLiked($product->id) ? 'liked' : '' }}"
-                                title="{{ $this->isLiked($product->id) ? 'Unlike' : 'Like' }}"
                             >
                                 <i class="fas fa-heart"></i>
                             </button>
                             @endrole
-                            <!-- Action Buttons (Edit/Delete for sellers) -->
-                            <div class="action-buttons" onclick="event.stopPropagation()">
-                                @if(auth()->user()->hasRole('seller') && $product->seller_id == auth()->id())
-                                    <a href="/products/edit/{{ $product->id }}" class="action-btn" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button 
-                                        wire:click.stop="delete({{ $product->id }})" 
-                                        class="action-btn" 
-                                        title="Delete"
-                                        onclick="return confirm('Are you sure you want to delete this product?')"
-                                    >
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                @endif
-                            </div>
                         </div>
-
+                        
                         <div class="product-info">
-                            <div class="product-category">{{ $product->category->name ?? 'Uncategorized' }}</div>
+                            <div class="product-category">{{ $product->category->name ?? 'UNCATEGORIZED' }}</div>
                             <h3 class="product-name">{{ $product->name }}</h3>
                             <p class="product-description">{{ Str::limit($product->description, 80) }}</p>
                             
-                            <div class="product-footer">
-                                <div>
-                                    <div class="product-price">${{ number_format($product->price, 2) }}</div>
-                                    <div class="stock-info {{ $product->stock < 10 ? 'stock-low' : '' }}">
-                                        {{ $product->stock }} in stock
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--gold); font-size: 0.9rem;">
+                            <div class="product-meta">
+                                <span class="product-price">${{ number_format($product->price, 2) }}</span>
+                                <div class="product-stats">
+                                    <span class="product-stat">
                                         <i class="fas fa-heart"></i> {{ $product->likes->count() }}
                                     </span>
-                                    <span style="color: var(--charcoal); opacity: 0.6; font-size: 0.9rem;">
-                                        <i class="fas fa-comment"></i> {{ $product->reviews->count() }}
+                                    <span class="product-stat">
+                                        <i class="fas fa-star"></i> {{ $this->getAverageRating($product) }}
                                     </span>
                                 </div>
+                            </div>
+
+                            <div class="product-actions">
+                                @role('customer')
+                                    <button wire:click.stop="addToCart({{ $product->id }})" class="action-btn primary">
+                                        <i class="fas fa-shopping-cart"></i> ADD TO CART
+                                    </button>
+                                @endrole
+
+                                @role('seller')
+                                    @if($product->seller_id == auth()->id())
+                                        <a href="{{ route('products.edit', $product) }}" class="action-btn">
+                                            <i class="fas fa-edit"></i> EDIT
+                                        </a>
+                                        <button wire:click.stop="delete({{ $product->id }})" class="action-btn danger">
+                                            <i class="fas fa-trash"></i> DELETE
+                                        </button>
+                                    @endif
+                                @endrole
                             </div>
                         </div>
                     </div>
@@ -1111,21 +1020,23 @@
             </div>
         @else
             <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-box-open"></i></div>
-                <h3 class="empty-title">No Products Found</h3>
-                <p class="empty-text">Try adjusting your filters or search terms</p>
+                <div class="empty-state-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3 class="empty-state-title">No Products Found</h3>
+                <p class="empty-state-text">Try adjusting your filters or search terms</p>
             </div>
         @endif
     </div>
 
-    <!-- Product Detail Modal -->
+    <!-- Product Modal -->
     @if($showModal && $selectedProduct)
-        <div class="modal-overlay" wire:click="closeModal">
-            <div class="modal-container" wire:click.stop>
+        <div class="modal-overlay" wire:click.self="closeModal">
+            <div class="modal-container">
                 <button wire:click="closeModal" class="modal-close">
                     <i class="fas fa-times"></i>
                 </button>
-
+                
                 <div class="modal-content">
                     <!-- Image Section -->
                     <div class="modal-image-section">
@@ -1174,6 +1085,33 @@
                                 <div class="meta-value">{{ $selectedProduct->reviews->count() }}</div>
                             </div>
                         </div>
+
+                        <!-- Quantity Selector -->
+                        @role('customer')
+                        <div class="quantity-selector">
+                            <label class="quantity-label">QUANTITY</label>
+                            <div class="quantity-controls">
+                                <button 
+                                    wire:click="$set('quantity', quantity > 1 ? quantity - 1 : 1)" 
+                                    class="quantity-btn"
+                                >
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input 
+                                    type="number" 
+                                    wire:model="quantity" 
+                                    min="1" 
+                                    class="quantity-input"
+                                >
+                                <button 
+                                    wire:click="$set('quantity', quantity + 1)" 
+                                    class="quantity-btn"
+                                >
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @endrole
 
                         <!-- Action Buttons -->
                         @role('customer')
