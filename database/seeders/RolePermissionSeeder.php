@@ -12,24 +12,24 @@ class RolePermissionSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
+        // Create permissions using firstOrCreate
         $permissions = [
             // Product permissions
             'create products',
             'edit products',
             'delete products',
             'view products',
-            
+
             // Order permissions
             'create orders',
             'view orders',
             'update order status',
             'view all orders',
-            
+
             // User permissions
             'manage users',
             'manage roles',
-            
+
             // Review permissions
             'create reviews',
             'delete reviews',
@@ -37,21 +37,29 @@ class RolePermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web'
+            ]);
         }
 
-      
-        $customer = Role::create(['name' => 'customer']);
-        $customer->givePermissionTo([
+        // Create roles using firstOrCreate and sync permissions
+        $customer = Role::firstOrCreate([
+            'name' => 'customer',
+            'guard_name' => 'web'
+        ]);
+        $customer->syncPermissions([
             'view products',
             'create orders',
             'view orders',
             'create reviews',
         ]);
 
-        
-        $seller = Role::create(['name' => 'seller']);
-        $seller->givePermissionTo([
+        $seller = Role::firstOrCreate([
+            'name' => 'seller',
+            'guard_name' => 'web'
+        ]);
+        $seller->syncPermissions([
             'create products',
             'edit products',
             'delete products',
@@ -60,15 +68,20 @@ class RolePermissionSeeder extends Seeder
             'update order status',
         ]);
 
-
-        $moderator = Role::create(['name' => 'moderator']);
-        $moderator->givePermissionTo([
+        $moderator = Role::firstOrCreate([
+            'name' => 'moderator',
+            'guard_name' => 'web'
+        ]);
+        $moderator->syncPermissions([
             'view products',
             'delete reviews',
             'moderate reviews',
         ]);
 
-        $admin = Role::create(['name' => 'admin']);
-        $admin->givePermissionTo(Permission::all());
+        $admin = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web'
+        ]);
+        $admin->syncPermissions(Permission::all());
     }
 }
