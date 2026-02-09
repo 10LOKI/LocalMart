@@ -1069,7 +1069,7 @@
                             <!-- Action Buttons (Edit/Delete for sellers) -->
                             <div class="action-buttons" onclick="event.stopPropagation()">
                                 @if(auth()->user()->hasRole('seller') && $product->seller_id == auth()->id())
-                                    <a href="/products/edit/{{ $product->id }}" class="action-btn" title="Edit">
+                                    <a href="{{ route('products.edit', $product->id) }}" class="action-btn" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button 
@@ -1290,7 +1290,7 @@
     @if(auth()->user()->hasRole('seller'))
         <div style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9997;">
             <a 
-                href="/products/create" 
+                href="{{ route('products.create') }}" 
                 style="
                     background: var(--charcoal);
                     color: var(--cream);

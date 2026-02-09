@@ -116,7 +116,7 @@ class ProductForm extends Component
             }
         }
 
-        return redirect('/products');
+        return redirect()->route('products.index');
     }
 
     public function render()

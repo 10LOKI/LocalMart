@@ -454,7 +454,7 @@
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <a href="/products" class="btn btn-secondary">
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">
                         CANCEL
                     </a>
                     <button 
