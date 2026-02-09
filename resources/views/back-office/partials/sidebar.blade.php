@@ -47,6 +47,7 @@
                         </svg>
                         Products
                     </a>
+                    @can('viewAny', App\Models\Category::class)
                     <a href="{{route('backoffice.categories.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M4 7h12l4 4-8 8-8-8 4-4Z" />
@@ -54,6 +55,7 @@
                         </svg>
                         Categories
                     </a>
+                    @endcan
                 </div>
             </div>
 
@@ -66,6 +68,7 @@
                         </svg>
                         Reviews
                     </a>
+                    @can('viewAny', App\Models\User::class)
                     <a href="{{route('backoffice.users.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />
@@ -73,7 +76,6 @@
                         </svg>
                         Users
                     </a>
-                    {{-- TODO: gate admin-only links (Roles & Permissions) --}}
                     <a href="{{route('backoffice.roles.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3Z" />
@@ -88,12 +90,14 @@
                         </svg>
                         Notifications
                     </a>
+                    @endcan
                 </div>
             </div>
 
             <div>
                 <p class="px-3 text-[11px] uppercase tracking-[0.3em] text-slate-400">Operations</p>
                 <div class="mt-3 space-y-1">
+                    @can('viewAny', App\Models\User::class)
                     <a href="{{route('backoffice.payements.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <rect x="3" y="6" width="18" height="12" rx="2" />
@@ -109,6 +113,7 @@
                         </svg>
                         Settings
                     </a>
+                    @endcan
                 </div>
             </div>
         </nav>
