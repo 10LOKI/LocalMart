@@ -60,10 +60,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice') -> name('backoffice.') -> group(function ()
 {
     // main dashboard
-    Route::get('/',function ()
-    {
-        return view('back-office.index');
-    }) -> name('dashboard');
+    Route::get('/', DashboardController::class)->name('dashboard');
 
     //orders - utiliser les composants existants
     Route::get('/orders', OrderList::class) -> name('orders.index');

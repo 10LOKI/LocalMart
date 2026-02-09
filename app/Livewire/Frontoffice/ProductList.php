@@ -171,9 +171,8 @@ class ProductList extends Component
         return round($product->reviews->avg('rating'), 1);
     }
 
-    public function addToCart($productId)
+    public function addToCart($productId, $quantity = 1)
     {
-   
         $cart = auth()->user()->getOrCreateCart();
 
         $item = $cart->items()
@@ -181,16 +180,14 @@ class ProductList extends Component
             ->first();
 
         if ($item) {
-          
-            $item->increment('quantity');
+            $item->increment('quantity', $quantity);
             session()->flash('message', 'Product quantity updated in cart!');
         } else {
-            
             $product = Product::findOrFail($productId);
 
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => 1,
+                'quantity' => $quantity,
                 'price' => $product->price,
             ]);
             
