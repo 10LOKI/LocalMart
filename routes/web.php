@@ -13,7 +13,9 @@ use App\Livewire\ReviewList;
 use App\Livewire\CartPage;
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::get('/dashboard', DashboardController::class)
