@@ -224,7 +224,7 @@
     <div class="categories-container">
         <div class="categories-header">
             <h1 class="categories-title">Categories</h1>
-            <a href="/categories/create" class="btn-add">
+            <a href="{{ route('categories.create') }}" class="btn-add">
                 <i class="fas fa-plus"></i> Add Category
             </a>
         </div>
@@ -244,7 +244,7 @@
                             <td class="category-name">{{ $cat->name }}</td>
                             <td style="text-align: right;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
-                                    <a href="/categories/edit/{{ $cat->id }}" class="btn-edit">
+                                    <a href="{{ route('categories.edit', $cat->id) }}" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     <button 
