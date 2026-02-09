@@ -307,7 +307,7 @@
                                     <div class="flex-1">
                                         <div class="flex items-center gap-3 mb-2">
                                             <!-- Avatar -->
-                                            <div class="h-10 w-10 rounded-full {{ ['bg-blue-100', 'bg-emerald-100', 'bg-purple-100', 'bg-amber-100', 'bg-rose-100', 'bg-cyan-100', 'bg-lime-100'][array_rand(['bg-blue-100', 'bg-emerald-100', 'bg-purple-100', 'bg-amber-100', 'bg-rose-100', 'bg-cyan-100', 'bg-lime-100'])] }} flex items-center justify-center text-sm font-semibold text-slate-600">
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-sm font-semibold text-slate-600">
                                                 {{ substr($review['customer'], 0, 1) }}
                                             </div>
                                             <div>

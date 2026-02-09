@@ -10,6 +10,8 @@ use App\Livewire\OrderDetail;
 use App\Livewire\Frontoffice\ProductList as FrontofficeProductList;
 use App\Livewire\Frontoffice\ReviewList as FrontofficeReviewList;
 use App\Livewire\Frontoffice\CartPage;
+use App\Livewire\Frontoffice\CategoryList as FrontofficeCategoryList;
+use App\Livewire\Frontoffice\OrderList as FrontofficeOrderList;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,41 +20,39 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if ($user && $user->hasRole(['admin', 'seller', 'moderator', 'manager'])) {
-        return redirect() -> route('backoffice.dashboard');
+    if ($user && $user->hasRole(['admin', 'moderator', 'manager'])) {
+        return redirect()->route('backoffice.dashboard');
+    }
+    
+    if ($user && $user->hasRole('seller')) {
+        return redirect()->route('products.index');
     }
 
-    return view('dashboard');
+    return redirect()->route('products.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
 //des routes qui redirigent selon les roles
 Route::middleware('auth')->group(function () {
-    Route::get('/categories', CategoryList::class)->name('categories.index');
-
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/categories/create', CategoryForm::class)->name('categories.create');
-        Route::get('/categories/edit/{id}', CategoryForm::class)->name('categories.edit');
-    });
-
-    Route::get('/products', \App\Livewire\ProductList::class)->name('products.index');
-
-    Route::middleware('role:seller')->group(function () {
-        Route::get('/products/create', ProductForm::class)->name('products.create');
-        Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
-    });
-
-    Route::get('/orders', OrderList::class)->name('orders.index');
-    Route::get('/orders/{id}', OrderDetail::class)->name('orders.show');
-
-    Route::get('/reviews', \App\Livewire\ReviewList::class)->name('reviews.index');
+    // Removed old orders routes - now handled in frontoffice
 });
 
 // Front office routes
-Route::middleware('auth')->prefix('shop')->name('shop.')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/products', FrontofficeProductList::class)->name('products.index');
     Route::get('/reviews', FrontofficeReviewList::class)->name('reviews.index');
     Route::get('/cart', CartPage::class)->name('cart');
+    Route::get('/categories', FrontofficeCategoryList::class)->name('categories.index');
+    Route::get('/my-orders', FrontofficeOrderList::class)->name('my-orders.index');
+    Route::get('/my-orders/{id}', OrderDetail::class)->name('my-orders.show');
+    
+    Route::middleware('role:seller|admin')->group(function () {
+        Route::get('/products/create', ProductForm::class)->name('products.create');
+        Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
+        Route::get('/categories/manage', CategoryList::class)->name('categories.manage');
+        Route::get('/categories/create', CategoryForm::class)->name('categories.create');
+        Route::get('/categories/edit/{id}', CategoryForm::class)->name('categories.edit');
+    });
 });
 
 // backoffice avec middleware dial auth et roles

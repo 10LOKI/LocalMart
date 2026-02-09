@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\Attributes\Layout;
-#[Layout('layouts.backoffice')]
+#[Layout('layouts.app')]
 
 class CategoryList extends Component
 {

@@ -257,7 +257,7 @@
 
             <!-- Filters and Search -->
             <section class="mb-6">
-                <x-chart-card class="px-6 py-4">
+                <div class="rounded-2xl border border-slate-200 bg-white px-6 py-4">
                     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5">
                             <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -309,7 +309,7 @@
                             </label>
                         </div>
                     </div>
-                </x-chart-card>
+                </div>
             </section>
 
             <!-- Users Table -->

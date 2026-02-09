@@ -377,7 +377,7 @@
         <div class="nav-links">
             <a href="/categories">CATEGORIES</a>
             <a href="/products">PRODUCTS</a>
-            <a href="/orders">ORDERS</a>
+            <a href="/my-orders">MY ORDERS</a>
             <a href="/reviews">REVIEWS</a>
             <a href="/cart" class="cart-link flex items-center gap-2">
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -419,7 +419,7 @@
                             <i class="fa-solid fa-user"></i>
                             <span>My Profile</span>
                         </a>
-                        <a href="/orders" class="dropdown-item">
+                        <a href="/my-orders" class="dropdown-item">
                             <i class="fa-solid fa-receipt"></i>
                             <span>My Orders</span>
                         </a>
@@ -458,7 +458,7 @@
                             <i class="fa-solid fa-plus-circle"></i>
                             <span>Add Product</span>
                         </a>
-                        <a href="/orders" class="dropdown-item">
+                        <a href="/my-orders" class="dropdown-item">
                             <i class="fa-solid fa-truck"></i>
                             <span>Manage Orders</span>
                         </a>
@@ -521,7 +521,7 @@
                 <h4>ACCOUNT</h4>
                 <ul class="footer-links">
                     @auth
-                    <li><a href="/orders">My Orders</a></li>
+                    <li><a href="/my-orders">My Orders</a></li>
                     <li><a href="/cart">My Cart</a></li>
                     <li><a href="/profile">Profile</a></li>
                     @else
