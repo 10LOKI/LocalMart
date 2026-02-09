@@ -87,7 +87,12 @@ class ProductList extends Component
             'reviews.user',
             'likes'
         ])->findOrFail($productId);
-        $this->quantity = 1;
+        
+        $cart = auth()->user()->getOrCreateCart();
+        $cartItem = $cart->items()->where('product_id', $productId)->first();
+        
+        $this->quantity = $cartItem ? $cartItem->quantity : 1;
+        
         $this->showModal = true;
         $this->resetComment();
     }
@@ -176,7 +181,6 @@ class ProductList extends Component
 
     public function addToCart($productId)
     {
-   
         $cart = auth()->user()->getOrCreateCart();
                 
         $item = $cart->items()
@@ -184,11 +188,9 @@ class ProductList extends Component
             ->first();
 
         if ($item) {
-          
-             $item->increment('quantity', $this->quantity);
+            $item->update(['quantity' => $this->quantity]);
             session()->flash('message', 'Product quantity updated in cart!');
         } else {
-            
             $product = Product::findOrFail($productId);
 
             $cart->items()->create([
@@ -200,4 +202,15 @@ class ProductList extends Component
             session()->flash('message', 'Product added to cart!');
         }
     }
+    public function incrementQuantity()
+{
+    $this->quantity++;
+}
+
+public function decrementQuantity()
+{
+    if ($this->quantity > 1) {
+        $this->quantity--;
+    }
+}
 }
