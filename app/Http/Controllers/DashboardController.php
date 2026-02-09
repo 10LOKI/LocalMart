@@ -42,6 +42,16 @@ class DashboardController extends Controller
 
             $ordersThisMonth = $this->countOrders($user, $isSeller, $startOfMonth, $now);
             $ordersLastMonth = $this->countOrders($user, $isSeller, $startOfLastMonth, $endOfLastMonth);
+            $paidOrdersThisMonth = $this->countOrdersByStatus(
+                $user,
+                $isSeller,
+                $startOfMonth,
+                $now,
+                ['paid', 'delivered']
+            );
+
+            $avgOrderValue = $ordersThisMonth > 0 ? $revenueThisMonth / $ordersThisMonth : 0;
+            $paidRate = $ordersThisMonth > 0 ? ($paidOrdersThisMonth / $ordersThisMonth) * 100 : 0;
 
             $totalProducts = $this->countProducts($user, $isSeller);
             $totalProductsLastMonth = $this->countProductsBefore($user, $isSeller, $startOfMonth);
@@ -155,6 +165,13 @@ class DashboardController extends Controller
 
             return [
                 'kpis' => $kpis,
+                'revenueSummary' => [
+                    'value' => $this->formatMoney($revenueThisMonth),
+                    'change' => $revenueChange,
+                    'changeType' => $revenueChangeType,
+                ],
+                'avgOrderValue' => $this->formatMoney($avgOrderValue),
+                'paidRate' => number_format($paidRate, 1) . '%',
                 'chartLabels' => $chartLabels,
                 'recentOrders' => $recentOrders,
                 'statusBreakdown' => $statusBreakdown,
@@ -189,6 +206,19 @@ class DashboardController extends Controller
     private function countOrders(User $user, bool $isSeller, Carbon $start, Carbon $end): int
     {
         return (int) $this->scopedOrders($user, $isSeller)
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
+    }
+
+    private function countOrdersByStatus(
+        User $user,
+        bool $isSeller,
+        Carbon $start,
+        Carbon $end,
+        array $statuses
+    ): int {
+        return (int) $this->scopedOrders($user, $isSeller)
+            ->whereIn('status', $statuses)
             ->whereBetween('created_at', [$start, $end])
             ->count();
     }

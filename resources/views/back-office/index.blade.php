@@ -105,23 +105,22 @@
 
                                 <div class="flex flex-wrap items-start justify-between gap-6">
                                     <div>
-                                        {{-- TODO: replace with real revenue metric --}}
                                         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Total Revenue</p>
-                                        <p class="mt-2 text-3xl font-semibold text-slate-900">$84,230</p>
+                                        <p class="mt-2 text-3xl font-semibold text-slate-900">{{ $revenueSummary['value'] }}</p>
                                         <div class="mt-2 flex items-center gap-2 text-xs text-slate-500">
-                                            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                                            +12.4% vs last month
+                                            <span class="inline-flex h-2 w-2 rounded-full {{ $revenueSummary['changeType'] === 'down' ? 'bg-rose-500' : 'bg-emerald-500' }}"></span>
+                                            {{ $revenueSummary['change'] }} vs last month
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 text-xs">
                                         <div>
                                             <p class="text-slate-500">Avg order</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">$65.34</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ $avgOrderValue }}</p>
                                         </div>
                                         <div class="h-8 w-px bg-slate-200"></div>
                                         <div>
-                                            <p class="text-slate-500">Conversion</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">3.6%</p>
+                                            <p class="text-slate-500">Paid rate</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ $paidRate }}</p>
                                         </div>
                                     </div>
                                 </div>

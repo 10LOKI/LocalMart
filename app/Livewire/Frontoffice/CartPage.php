@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Frontoffice;
 
 use Livewire\Component;
 use App\Models\Cart;
