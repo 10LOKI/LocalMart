@@ -2,7 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Review;
+use App\Models\User;
+use App\Policies\CategoryPolicy;
+use App\Policies\ProductPolicy;
+use App\Policies\ReviewPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,7 +30,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerPolicies();
         $this->cleanupStaleViteHotFile();
+    }
+
+    private function registerPolicies(): void
+    {
+        Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(Category::class, CategoryPolicy::class);
+        Gate::policy(Review::class, ReviewPolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
     }
 
     private function cleanupStaleViteHotFile(): void
