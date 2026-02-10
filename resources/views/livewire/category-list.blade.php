@@ -227,6 +227,12 @@
                 {{ session('message') }}
             </div>
         @endif
+
+        @if(session('error'))
+            <div style="background: #C97757; color: white; padding: 1rem 2rem; border-radius: 4px; margin-bottom: 2rem; text-align: center;">
+                {{ session('error') }}
+            </div>
+        @endif
         
         <div class="categories-header">
             <h1 class="categories-title">Categories</h1>

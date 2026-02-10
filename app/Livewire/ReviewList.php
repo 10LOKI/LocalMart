@@ -5,20 +5,25 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Review;
 use Livewire\Attributes\Layout;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 #[Layout('layouts.backoffice')]
 
 class ReviewList extends Component
 {
+    use AuthorizesRequests;
+
     public function delete($id)
     {
         $review = Review::find($id);
 
-        if (auth()->user()->hasRole('admin') ||
-            (auth()->user()->hasRole('seller') && $review->product->seller_id == auth()->id()) ||
-            $review->user_id == auth()->id()) {
-            $review->delete();
-            session()->flash('message', 'Review deleted successfully!');
+        if (! $review) {
+            return;
         }
+
+        $this->authorize('delete', $review);
+
+        $review->delete();
+        session()->flash('message', 'Review deleted successfully!');
     }
 
     public function render()

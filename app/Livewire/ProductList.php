@@ -6,10 +6,13 @@ use Livewire\Component;
 use App\Models\Product;
 use App\Models\Category;
 use Livewire\Attributes\Layout;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 #[Layout('layouts.backoffice')]
 class ProductList extends Component
 {
+    use AuthorizesRequests;
+
     public $search = '';
     public $selectedCategory = '';
     public $sortBy = 'newest';
@@ -21,13 +24,19 @@ class ProductList extends Component
     {
         $product = Product::find($id);
 
-        if (auth()->user()->hasRole('seller') && $product->seller_id == auth()->id()) {
-            $product->delete();
-            session()->flash('message', 'Product deleted successfully!');
-        } elseif (auth()->user()->hasRole('admin')) {
-            $product->delete();
-            session()->flash('message', 'Product deleted successfully!');
+        if (! $product) {
+            return;
         }
+
+        $this->authorize('delete', $product);
+
+        if ($product->orderItems()->exists()) {
+            session()->flash('error', 'Cannot delete a product with existing orders.');
+            return;
+        }
+
+        $product->delete();
+        session()->flash('message', 'Product deleted successfully!');
     }
 
     public function render()

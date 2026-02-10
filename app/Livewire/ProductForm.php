@@ -9,10 +9,12 @@ use App\Models\ProductPhoto;
 use App\Models\Category;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProductForm extends Component
 {
     use WithFileUploads;
+    use AuthorizesRequests;
 
     public $productId;
     public $name, $description, $price, $stock, $category_id;
@@ -23,10 +25,11 @@ class ProductForm extends Component
     {
         if ($id) {
             $product = Product::with('photos')->find($id);
-            
-            if (auth()->user()->hasRole('seller') && $product->seller_id != auth()->id()) {
-                abort(403, 'Unauthorized');
+            if (! $product) {
+                abort(404);
             }
+
+            $this->authorize('update', $product);
             
             $this->productId = $product->id;
             $this->name = $product->name;
@@ -73,10 +76,10 @@ class ProductForm extends Component
         try {
             if ($this->productId) {
                 $product = Product::find($this->productId);
-                
-                if (auth()->user()->hasRole('seller') && $product->seller_id != auth()->id()) {
-                    abort(403, 'Unauthorized');
+                if (! $product) {
+                    abort(404);
                 }
+                $this->authorize('update', $product);
                 
                 $product->update([
                     'name' => $this->name,
@@ -88,6 +91,7 @@ class ProductForm extends Component
 
                 $message = 'Product updated successfully!';
             } else {
+                $this->authorize('create', Product::class);
                 $product = Product::create([
                     'seller_id' => auth()->id(),
                     'name' => $this->name,

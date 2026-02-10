@@ -46,13 +46,13 @@
                         {{ $review->created_at->format('M d, Y') }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        @if(auth()->user()->hasRole('admin') || (auth()->user()->hasRole('seller') && $review->product->seller_id == auth()->id()) || $review->user_id == auth()->id())
+                        @can('delete', $review)
                             <button wire:click="delete({{ $review->id }})"
                                     onclick="return confirm('Are you sure you want to delete this review?')"
                                     class="text-red-600 hover:text-red-900">
                                 <i class="fas fa-trash"></i>
                             </button>
-                        @endif
+                        @endcan
                     </td>
                 </tr>
             @empty
