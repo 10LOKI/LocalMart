@@ -397,6 +397,8 @@
                                 Admin
                             @elseif(auth()->user()->hasRole('seller'))
                                 Seller
+                                @elseif(auth()->user()->hasRole('moderator'))
+                                Moderator
                             @else
                                 Customer
                             @endif
@@ -439,7 +441,7 @@
                             <i class="fa-solid fa-tags"></i>
                             <span>Manage Categories</span>
                         </a>
-                        <a href="/dashboard" class="dropdown-item">
+                        <a href="/admin/dashboard" class="dropdown-item">
                             <i class="fa-solid fa-chart-line"></i>
                             <span>Dashboard</span>
                         </a>
