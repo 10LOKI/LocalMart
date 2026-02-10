@@ -9,11 +9,9 @@ use App\Livewire\CategoryForm;
 use App\Livewire\ProductForm;
 use App\Livewire\OrderList;
 use App\Livewire\OrderDetail;
-use App\Livewire\Frontoffice\ProductList as FrontofficeProductList;
-use App\Livewire\Frontoffice\ReviewList as FrontofficeReviewList;
-use App\Livewire\Frontoffice\CartPage;
-use App\Livewire\Frontoffice\CategoryList as FrontofficeCategoryList;
-use App\Livewire\Frontoffice\OrderList as FrontofficeOrderList;
+use App\Livewire\ReviewList;
+use App\Livewire\CartPage;
+use App\Livewire\AdminDashboard;
 
 Route::get('/', function () {
     return auth()->check()
@@ -53,10 +51,12 @@ Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice'
     // main dashboard
     Route::get('/', DashboardController::class)->name('dashboard');
 
-    //orders - utiliser les composants existants
-    Route::get('/orders', OrderList::class) -> name('orders.index');
-    Route::get('/orders/{id}', OrderDetail::class) ->name('orders.show');
-    Route::post('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    // Admin Dashboard - Only for admin role
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
+    });
+
+    Route::get('/categories', CategoryList::class)->name('categories.index');
 
     //Products(seller) - utiliser les composants existants
     Route::middleware('role:seller|admin') -> group(function()
@@ -87,16 +87,4 @@ Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice'
             return view('back-office.roles');
         })->name('roles.index');
 
-        Route::get('/notifications', function ()
-        {
-            return view('back-office.notifications');
-        }) -> name('notifications.index');
-
-        //payements
-        Route::get('/payements' , function ()
-        {
-            return view('back-office.paiements');
-        }) -> name('payements.index');
-    });
-});
 require __DIR__.'/auth.php';
