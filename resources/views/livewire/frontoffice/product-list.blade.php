@@ -673,6 +673,64 @@
             color: var(--charcoal);
         }
 
+        /* Quantity Control */
+        .quantity-control {
+            margin: 2rem 0;
+        }
+
+        .quantity-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            color: var(--charcoal);
+            opacity: 0.7;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-btn {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(42, 42, 42, 0.2);
+            background: var(--soft-white);
+            color: var(--charcoal);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover:not(:disabled) {
+            background: var(--charcoal);
+            color: var(--cream);
+            border-color: var(--charcoal);
+        }
+
+        .quantity-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .quantity-display {
+            width: 80px;
+            height: 45px;
+            border: 1px solid rgba(42, 42, 42, 0.2);
+            background: var(--cream);
+            color: var(--charcoal);
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* Reviews Section */
         .reviews-section {
             margin-top: 2rem;
@@ -1069,7 +1127,7 @@
                             <!-- Action Buttons (Edit/Delete for sellers) -->
                             <div class="action-buttons" onclick="event.stopPropagation()">
                                 @if(auth()->user()->hasRole('seller') && $product->seller_id == auth()->id())
-                                    <a href="{{ route('products.edit', $product->id) }}" class="action-btn" title="Edit">
+                                    <a href="/products/edit/{{ $product->id }}" class="action-btn" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button 
@@ -1174,6 +1232,30 @@
                                 <div class="meta-value">{{ $selectedProduct->reviews->count() }}</div>
                             </div>
                         </div>
+
+                        <!-- Quantity Control -->
+                        @role('customer')
+                            <div class="quantity-control">
+                                <div class="quantity-label">QUANTITY</div>
+                                <div class="quantity-selector">
+                                    <button 
+                                        wire:click="decrementQuantity" 
+                                        class="quantity-btn"
+                                        {{ $quantity <= 1 ? 'disabled' : '' }}
+                                    >
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <div class="quantity-display">{{ $quantity }}</div>
+                                    <button 
+                                        wire:click="incrementQuantity" 
+                                        class="quantity-btn"
+                                        {{ $quantity >= $selectedProduct->stock ? 'disabled' : '' }}
+                                    >
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endrole
 
                         <!-- Action Buttons -->
                         @role('customer')

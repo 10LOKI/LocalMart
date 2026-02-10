@@ -20,9 +20,10 @@ class ProductList extends Component
     
     public $selectedProduct = null;
     public $showModal = false;
+    public $quantity = 1;
     
     public $newComment = '';
-    public $newRating = 0;
+    public $newRating = 5;
 
     public function delete($id)
     {
@@ -93,7 +94,22 @@ class ProductList extends Component
     {
         $this->showModal = false;
         $this->selectedProduct = null;
+        $this->quantity = 1;
         $this->resetComment();
+    }
+
+    public function incrementQuantity()
+    {
+        if ($this->selectedProduct && $this->quantity < $this->selectedProduct->stock) {
+            $this->quantity++;
+        }
+    }
+
+    public function decrementQuantity()
+    {
+        if ($this->quantity > 1) {
+            $this->quantity--;
+        }
     }
 
     public function toggleLike($productId)
@@ -171,30 +187,33 @@ class ProductList extends Component
         return round($product->reviews->avg('rating'), 1);
     }
 
-    public function addToCart($productId)
+    public function addToCart($productId, $quantity = null)
     {
-   
         $cart = auth()->user()->getOrCreateCart();
+        
+        // Use provided quantity or default to the component's quantity property
+        $qty = $quantity ?? $this->quantity;
 
         $item = $cart->items()
             ->where('product_id', $productId)
             ->first();
 
         if ($item) {
-          
-            $item->increment('quantity');
+            $item->increment('quantity', $qty);
             session()->flash('message', 'Product quantity updated in cart!');
         } else {
-            
             $product = Product::findOrFail($productId);
 
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => 1,
+                'quantity' => $qty,
                 'price' => $product->price,
             ]);
             
             session()->flash('message', 'Product added to cart!');
         }
+        
+        // Reset quantity after adding to cart
+        $this->quantity = 1;
     }
 }
