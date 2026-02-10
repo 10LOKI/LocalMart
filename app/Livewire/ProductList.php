@@ -5,13 +5,9 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Like;
-use App\Models\Review;
-use App\Models\Cart;
-use App\Models\Order;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.backoffice')]
 class ProductList extends Component
 {
     public $search = '';
@@ -46,9 +42,12 @@ class ProductList extends Component
         if ($this->isSeller() && $product->seller_id == auth()->id()) {
             $product->delete();
             session()->flash('message', 'Product deleted successfully!');
+        } elseif (auth()->user()->hasRole('admin')) {
+            $product->delete();
+            session()->flash('message', 'Product deleted successfully!');
         }
     }
- 
+
     public function render()
     {
         $query = Product::with(['category', 'seller', 'photos', 'likes', 'reviews']);
@@ -71,7 +70,7 @@ class ProductList extends Component
         if ($this->selectedCategory) {
             $query->where('category_id', $this->selectedCategory);
         }
-    
+
         switch ($this->sortBy) {
             case 'price_low':
                 $query->orderBy('price', 'asc');

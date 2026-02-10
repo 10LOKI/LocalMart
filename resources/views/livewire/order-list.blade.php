@@ -237,7 +237,7 @@
                             </div>
                         </div>
 
-                        <a href="/orders/{{ $order->id }}" class="btn-view">
+                        <a href="{{ route('backoffice.orders.show', $order->id) }}" class="btn-view">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                     </div>

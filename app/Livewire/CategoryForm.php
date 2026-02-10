@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\Attributes\Layout;
-#[Layout('layouts.app')]
+
 class CategoryForm extends Component
 {
     public $categoryId;
@@ -22,19 +22,23 @@ class CategoryForm extends Component
 
     public function save()
     {
-        $this->validate(['name' => 'required']);
+        $this->validate(['name' => 'required|string|max:255']);
 
         if ($this->categoryId) {
             Category::find($this->categoryId)->update(['name' => $this->name]);
+            session()->flash('message', 'Category updated successfully!');
         } else {
             Category::create(['name' => $this->name]);
+            session()->flash('message', 'Category created successfully!');
         }
 
-        return redirect('/categories');
+        $route = request()->is('backoffice/*') ? 'backoffice.categories.index' : 'categories.manage';
+        return redirect()->route($route);
     }
 
     public function render()
     {
-        return view('livewire.category-form');
+        $layout = request()->is('backoffice/*') ? 'layouts.backoffice' : 'layouts.app';
+        return view('livewire.category-form')->layout($layout);
     }
 }
