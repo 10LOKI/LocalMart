@@ -4,6 +4,11 @@
             {{ session('message') }}
         </div>
     @endif
+    @if(session('error'))
+        <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-800">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- Header with Add Button -->
     <div class="mb-6 flex items-center justify-between">

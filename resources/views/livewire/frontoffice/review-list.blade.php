@@ -226,13 +226,15 @@
                                 <div class="review-comment">{{ $review->comment }}</div>
                             </td>
                             <td style="text-align: right;">
-                                <button 
-                                    wire:click="delete({{ $review->id }})" 
-                                    class="btn-delete"
-                                    onclick="return confirm('Are you sure you want to delete this review?')"
-                                >
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
+                                @can('delete', $review)
+                                    <button 
+                                        wire:click="delete({{ $review->id }})" 
+                                        class="btn-delete"
+                                        onclick="return confirm('Are you sure you want to delete this review?')"
+                                    >
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

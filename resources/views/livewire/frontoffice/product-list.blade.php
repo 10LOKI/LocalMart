@@ -205,6 +205,45 @@
             gap: 2.5rem;
         }
 
+        .pagination {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            min-width: 42px;
+            height: 42px;
+            border: 1px solid rgba(42, 42, 42, 0.2);
+            background: var(--soft-white);
+            color: var(--charcoal);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn:hover:not(.active):not(:disabled) {
+            background: var(--cream);
+            border-color: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .page-btn.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--charcoal);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
         .product-card {
             background: var(--soft-white);
             border-radius: 4px;
@@ -1094,10 +1133,10 @@
                     All Products
                 @endif
             </h2>
-            <div class="product-count">{{ count($products) }} {{ Str::plural('product', count($products)) }}</div>
+            <div class="product-count">{{ $products->total() }} {{ Str::plural('product', $products->total()) }}</div>
         </div>
 
-        @if(count($products) > 0)
+        @if($products->count() > 0)
             <div class="product-grid">
                 @foreach($products as $index => $product)
                     <div class="product-card" style="animation-delay: {{ $index * 0.05 }}s" wire:click="preview({{ $product->id }})">
@@ -1167,6 +1206,34 @@
                     </div>
                 @endforeach
             </div>
+            @if($products->hasPages())
+                <div class="pagination">
+                    <button
+                        class="page-btn"
+                        wire:click="previousPage"
+                        @disabled($products->onFirstPage())
+                    >
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    @foreach(range(1, $products->lastPage()) as $page)
+                        <button
+                            class="page-btn {{ $page === $products->currentPage() ? 'active' : '' }}"
+                            wire:click="gotoPage({{ $page }})"
+                        >
+                            {{ $page }}
+                        </button>
+                    @endforeach
+
+                    <button
+                        class="page-btn"
+                        wire:click="nextPage"
+                        @disabled(! $products->hasMorePages())
+                    >
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            @endif
         @else
             <div class="empty-state">
                 <div class="empty-icon"><i class="fas fa-box-open"></i></div>

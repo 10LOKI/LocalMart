@@ -14,6 +14,10 @@ use App\Livewire\Frontoffice\ReviewList as FrontofficeReviewList;
 use App\Livewire\Frontoffice\CartPage;
 use App\Livewire\Frontoffice\CategoryList as FrontofficeCategoryList;
 use App\Livewire\Frontoffice\OrderList as FrontofficeOrderList;
+use App\Livewire\Frontoffice\CheckoutPage;
+use App\Livewire\Frontoffice\OrderConfirmation;
+use App\Livewire\Frontoffice\OrderDetail as FrontofficeOrderDetail;
+use App\Livewire\UserModeration;
 
 Route::get('/', function () {
     return auth()->check()
@@ -42,9 +46,11 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/products', FrontofficeProductList::class)->name('products.index');
     Route::get('/reviews', FrontofficeReviewList::class)->name('reviews.index');
     Route::get('/cart', CartPage::class)->name('cart');
+    Route::get('/checkout', CheckoutPage::class)->name('checkout');
+    Route::get('/order-confirmation/{order}', OrderConfirmation::class)->name('order.confirmation');
     Route::get('/categories', FrontofficeCategoryList::class)->name('categories.index');
     Route::get('/my-orders', FrontofficeOrderList::class)->name('my-orders.index');
-    Route::get('/my-orders/{id}', OrderDetail::class)->name('my-orders.show');
+    Route::get('/my-orders/{id}', FrontofficeOrderDetail::class)->name('my-orders.show');
 });
 
 // backoffice avec middleware dial auth et roles
@@ -77,12 +83,13 @@ Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice'
     // Reviews - utiliser le composant existant
     Route::get('/reviews', \App\Livewire\ReviewList::class) -> name('reviews.index');
 
+    // Users moderation (admin & moderator)
+    Route::middleware('role:admin|moderator')->group(function () {
+        Route::get('/users', UserModeration::class)->name('users.index');
+    });
+
     // users w roles (dial admin)
     Route::middleware('role:admin')->group(function () {
-        Route::get('/users', function () {
-            return view('back-office.users');
-        })->name('users.index');
-
         Route::get('/roles', function () {
             return view('back-office.roles');
         })->name('roles.index');

@@ -33,6 +33,24 @@
                         {{ __('Reviews') }}
                     </x-nav-link>
                     @endif
+
+                    @if(auth()->check() && auth()->user()->hasAnyRole(['seller', 'admin']))
+                    <x-nav-link :href="route('backoffice.products.index')" :active="request()->routeIs('backoffice.products.*')">
+                        {{ __('Seller Products') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('backoffice.categories.index')" :active="request()->routeIs('backoffice.categories.*')">
+                        {{ __('Seller Categories') }}
+                    </x-nav-link>
+                    @endif
+
+                    @if(auth()->check() && auth()->user()->hasAnyRole(['moderator', 'admin']))
+                    <x-nav-link :href="route('backoffice.users.index')" :active="request()->routeIs('backoffice.users.*')">
+                        {{ __('Moderate Users') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('backoffice.reviews.index')" :active="request()->routeIs('backoffice.reviews.*')">
+                        {{ __('Moderate Reviews') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -88,6 +106,41 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(auth()->check() && !auth()->user()->hasAnyRole(['admin', 'seller', 'moderator', 'manager']))
+                <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                    {{ __('Products') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index')">
+                    {{ __('Categories') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('my-orders.index')" :active="request()->routeIs('my-orders.*')">
+                    {{ __('My Orders') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('cart')" :active="request()->routeIs('cart')">
+                    {{ __('Cart') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('reviews.index')" :active="request()->routeIs('reviews.*')">
+                    {{ __('Reviews') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->check() && auth()->user()->hasAnyRole(['seller', 'admin']))
+                <x-responsive-nav-link :href="route('backoffice.products.index')" :active="request()->routeIs('backoffice.products.*')">
+                    {{ __('Seller Products') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('backoffice.categories.index')" :active="request()->routeIs('backoffice.categories.*')">
+                    {{ __('Seller Categories') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->check() && auth()->user()->hasAnyRole(['moderator', 'admin']))
+                <x-responsive-nav-link :href="route('backoffice.users.index')" :active="request()->routeIs('backoffice.users.*')">
+                    {{ __('Moderate Users') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('backoffice.reviews.index')" :active="request()->routeIs('backoffice.reviews.*')">
+                    {{ __('Moderate Reviews') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

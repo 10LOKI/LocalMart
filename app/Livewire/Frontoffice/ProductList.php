@@ -3,20 +3,22 @@
 namespace App\Livewire\Frontoffice;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Like;
 use App\Models\Review;
-use App\Models\Cart;
-use App\Models\Order;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class ProductList extends Component
 {
+    use WithPagination;
+
     public $search = '';
     public $selectedCategory = '';
     public $sortBy = 'newest';
+    public $perPage = 12;
     
     public $selectedProduct = null;
     public $showModal = false;
@@ -24,6 +26,32 @@ class ProductList extends Component
     
     public $newComment = '';
     public $newRating = 5;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'selectedCategory' => ['except' => ''],
+        'sortBy' => ['except' => 'newest'],
+    ];
+
+    public function mount(): void
+    {
+        $this->perPage = (int) config('pagination.products', 12);
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedCategory(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortBy(): void
+    {
+        $this->resetPage();
+    }
 
     public function delete($id)
     {
@@ -71,7 +99,7 @@ class ProductList extends Component
         }
 
         return view('livewire.frontoffice.product-list', [
-            'products' => $query->get(),
+            'products' => $query->paginate($this->perPage),
             'categories' => Category::all()
         ]);
     }
@@ -199,10 +227,20 @@ class ProductList extends Component
             ->first();
 
         if ($item) {
+            $product = $item->product;
+            if ($product && ! is_null($product->stock) && ($item->quantity + $qty) > $product->stock) {
+                session()->flash('message', 'Not enough stock available for this product.');
+                return;
+            }
+
             $item->increment('quantity', $qty);
             session()->flash('message', 'Product quantity updated in cart!');
         } else {
             $product = Product::findOrFail($productId);
+            if (! is_null($product->stock) && $qty > $product->stock) {
+                session()->flash('message', 'Not enough stock available for this product.');
+                return;
+            }
 
             $cart->items()->create([
                 'product_id' => $product->id,
@@ -215,5 +253,16 @@ class ProductList extends Component
         
         // Reset quantity after adding to cart
         $this->quantity = 1;
+    }
+
+    public function checkout()
+    {
+        if (! $this->selectedProduct) {
+            return;
+        }
+
+        $this->addToCart($this->selectedProduct->id, $this->quantity);
+
+        return redirect()->route('checkout');
     }
 }

@@ -40,6 +40,7 @@
                         </svg>
                         Orders
                     </a>
+                    @can('viewAny', App\Models\Product::class)
                     <a href="{{route('backoffice.products.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M4 7l8-4 8 4v10l-8 4-8-4V7Z" />
@@ -47,6 +48,7 @@
                         </svg>
                         Products
                     </a>
+                    @endcan
                     @can('viewAny', App\Models\Category::class)
                     <a href="{{route('backoffice.categories.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -62,12 +64,14 @@
             <div>
                 <p class="px-3 text-[11px] uppercase tracking-[0.3em] text-slate-400">Engagement</p>
                 <div class="mt-3 space-y-1">
+                    @can('viewAny', App\Models\Review::class)
                     <a href="{{route('backoffice.reviews.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M12 3l2.8 5.6 6.2.9-4.5 4.3 1 6.1-5.5-2.9-5.5 2.9 1-6.1L3 9.5l6.2-.9L12 3Z" />
                         </svg>
                         Reviews
                     </a>
+                    @endcan
                     @can('viewAny', App\Models\User::class)
                     <a href="{{route('backoffice.users.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -76,6 +80,8 @@
                         </svg>
                         Users
                     </a>
+                    @endcan
+                    @role('admin')
                     <a href="{{route('backoffice.roles.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3Z" />
@@ -90,14 +96,14 @@
                         </svg>
                         Notifications
                     </a>
-                    @endcan
+                    @endrole
                 </div>
             </div>
 
             <div>
                 <p class="px-3 text-[11px] uppercase tracking-[0.3em] text-slate-400">Operations</p>
                 <div class="mt-3 space-y-1">
-                    @can('viewAny', App\Models\User::class)
+                    @role('admin')
                     <a href="{{route('backoffice.payements.index')}}" class="group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                         <svg class="h-5 w-5 text-slate-400 group-hover:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <rect x="3" y="6" width="18" height="12" rx="2" />
@@ -113,7 +119,7 @@
                         </svg>
                         Settings
                     </a>
-                    @endcan
+                    @endrole
                 </div>
             </div>
         </nav>

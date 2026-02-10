@@ -5,9 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\Attributes\Layout;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\Rule;
 
 class CategoryForm extends Component
 {
+    use AuthorizesRequests;
+
     public $categoryId;
     public $name;
 
@@ -15,6 +19,10 @@ class CategoryForm extends Component
     {
         if ($id) {
             $category = Category::find($id);
+            if (! $category) {
+                abort(404);
+            }
+            $this->authorize('update', $category);
             $this->categoryId = $category->id;
             $this->name = $category->name;
         }
@@ -22,17 +30,30 @@ class CategoryForm extends Component
 
     public function save()
     {
-        $this->validate(['name' => 'required|string|max:255']);
+        $this->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categories', 'name')->ignore($this->categoryId),
+            ],
+        ]);
 
         if ($this->categoryId) {
-            Category::find($this->categoryId)->update(['name' => $this->name]);
+            $category = Category::find($this->categoryId);
+            if (! $category) {
+                abort(404);
+            }
+            $this->authorize('update', $category);
+            $category->update(['name' => $this->name]);
             session()->flash('message', 'Category updated successfully!');
         } else {
+            $this->authorize('create', Category::class);
             Category::create(['name' => $this->name]);
             session()->flash('message', 'Category created successfully!');
         }
 
-        $route = request()->is('backoffice/*') ? 'backoffice.categories.index' : 'categories.manage';
+        $route = request()->is('backoffice/*') ? 'backoffice.categories.index' : 'categories.index';
         return redirect()->route($route);
     }
 
