@@ -10,6 +10,7 @@ use App\Livewire\OrderList;
 use App\Livewire\OrderDetail;
 use App\Livewire\ReviewList;
 use App\Livewire\CartPage;
+use App\Livewire\AdminDashboard;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,6 +28,11 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    // Admin Dashboard - Only for admin role
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
+    });
 
     Route::get('/categories', CategoryList::class)->name('categories.index');
 
@@ -50,4 +56,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', CartPage::class)->name('cart');
 });
 
-require __DIR__.'/auth.php';    
+require __DIR__.'/auth.php';
