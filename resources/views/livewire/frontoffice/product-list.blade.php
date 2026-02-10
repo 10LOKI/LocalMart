@@ -1393,7 +1393,7 @@
     @if($isSeller)
         <div style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9997;">
             <a 
-                href="/products/create" 
+                href="{{ route('products.create') }}" 
                 style="
                     background: var(--charcoal);
                     color: var(--cream);
