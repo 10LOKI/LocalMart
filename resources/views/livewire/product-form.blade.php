@@ -304,11 +304,13 @@
             <form wire:submit.prevent="save">
                 <!-- Product Name -->
                 <div class="form-group">
-                    <label class="form-label">
+                    <label for="name" class="form-label">
                         Product Name <span class="required">*</span>
                     </label>
                     <input 
-                        type="text" 
+                        type="text"
+                        id="name"
+                        name="name" 
                         class="form-input" 
                         wire:model="name"
                         placeholder="Enter product name"
@@ -321,10 +323,10 @@
                 <!-- Category and Price Row -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">
+                        <label for="category_id" class="form-label">
                             Category <span class="required">*</span>
                         </label>
-                        <select class="form-select" wire:model="category_id">
+                        <select id="category_id" name="category_id" class="form-select" wire:model="category_id">
                             <option value="">Select a category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -336,11 +338,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">
+                        <label for="price" class="form-label">
                             Price <span class="required">*</span>
                         </label>
                         <input 
-                            type="number" 
+                            type="number"
+                            id="price"
+                            name="price" 
                             step="0.01" 
                             class="form-input" 
                             wire:model="price"
@@ -354,11 +358,13 @@
 
                 <!-- Stock -->
                 <div class="form-group">
-                    <label class="form-label">
+                    <label for="stock" class="form-label">
                         Stock Quantity <span class="required">*</span>
                     </label>
                     <input 
-                        type="number" 
+                        type="number"
+                        id="stock"
+                        name="stock" 
                         class="form-input" 
                         wire:model="stock"
                         placeholder="0"
@@ -370,10 +376,12 @@
 
                 <!-- Description -->
                 <div class="form-group">
-                    <label class="form-label">
+                    <label for="description" class="form-label">
                         Description <span class="required">*</span>
                     </label>
-                    <textarea 
+                    <textarea
+                        id="description"
+                        name="description" 
                         class="form-textarea" 
                         wire:model="description"
                         placeholder="Describe your product in detail..."
@@ -385,8 +393,8 @@
 
                 <!-- Image Upload -->
                 <div class="image-upload-section">
-                    <label class="form-label">
-                        Product Images <span class="required">*</span>
+                    <label for="image-upload" class="form-label">
+                        Product Images
                     </label>
                     <label class="image-upload-label" for="image-upload">
                         <div class="upload-icon">
@@ -398,6 +406,7 @@
                     <input 
                         type="file" 
                         id="image-upload"
+                        name="images"
                         class="image-upload-input" 
                         wire:model="images"
                         multiple
@@ -454,7 +463,7 @@
 
                 <!-- Form Actions -->
                 <div class="form-actions">
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                    <a href="{{ request()->is('backoffice/*') ? route('backoffice.products.index') : route('products.index') }}" class="btn btn-secondary">
                         CANCEL
                     </a>
                     <button 

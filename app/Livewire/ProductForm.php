@@ -10,7 +10,6 @@ use App\Models\Category;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Storage;
 
-#[Layout('layouts.app')]
 class ProductForm extends Component
 {
     use WithFileUploads;
@@ -25,7 +24,6 @@ class ProductForm extends Component
         if ($id) {
             $product = Product::with('photos')->find($id);
             
- 
             if (auth()->user()->hasRole('seller') && $product->seller_id != auth()->id()) {
                 abort(403, 'Unauthorized');
             }
@@ -50,15 +48,11 @@ class ProductForm extends Component
         $photo = ProductPhoto::find($photoId);
         
         if ($photo && $photo->product->seller_id == auth()->id()) {
-  
             if (Storage::disk('public')->exists($photo->image)) {
                 Storage::disk('public')->delete($photo->image);
             }
             
-      
             $photo->delete();
-            
-     
             $this->existingPhotos = ProductPhoto::where('product_id', $this->productId)->get();
             
             session()->flash('message', 'Photo deleted successfully!');
@@ -67,7 +61,7 @@ class ProductForm extends Component
 
     public function save()
     {
-        $this->validate([
+        $validated = $this->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -76,53 +70,58 @@ class ProductForm extends Component
             'images.*' => 'nullable|image|max:2048',
         ]);
 
-        if ($this->productId) {
+        try {
+            if ($this->productId) {
+                $product = Product::find($this->productId);
+                
+                if (auth()->user()->hasRole('seller') && $product->seller_id != auth()->id()) {
+                    abort(403, 'Unauthorized');
+                }
+                
+                $product->update([
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'price' => $this->price,
+                    'stock' => $this->stock,
+                    'category_id' => $this->category_id,
+                ]);
 
-            $product = Product::find($this->productId);
-            
+                $message = 'Product updated successfully!';
+            } else {
+                $product = Product::create([
+                    'seller_id' => auth()->id(),
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'price' => $this->price,
+                    'stock' => $this->stock,
+                    'category_id' => $this->category_id,
+                ]);
 
-            if (auth()->user()->hasRole('seller') && $product->seller_id != auth()->id()) {
-                abort(403, 'Unauthorized');
+                $message = 'Product created successfully!';
             }
-            
-            $product->update([
-                'name' => $this->name,
-                'description' => $this->description,
-                'price' => $this->price,
-                'stock' => $this->stock,
-                'category_id' => $this->category_id,
-            ]);
 
-            session()->flash('message', 'Product updated successfully!');
-        } else {
-
-            $product = Product::create([
-                'seller_id' => auth()->id(),
-                'name' => $this->name,
-                'description' => $this->description,
-                'price' => $this->price,
-                'stock' => $this->stock,
-                'category_id' => $this->category_id,
-            ]);
-
-            session()->flash('message', 'Product created successfully!');
-        }
-
-
-        if ($this->images) {
-            foreach ($this->images as $image) {
-                $path = $image->store('products', 'public');
-                $product->photos()->create(['image' => $path]);
+            if ($this->images) {
+                foreach ($this->images as $image) {
+                    $path = $image->store('products', 'public');
+                    $product->photos()->create(['image' => $path]);
+                }
             }
-        }
 
-        return redirect()->route('products.index');
+            session()->flash('message', $message);
+            
+            $route = request()->is('backoffice/*') ? 'backoffice.products.index' : 'products.index';
+            return redirect()->route($route);
+        } catch (\Exception $e) {
+            logger('Product save error: ' . $e->getMessage());
+            session()->flash('error', 'Failed to save product. Please try again.');
+        }
     }
 
     public function render()
     {
+        $layout = request()->is('backoffice/*') ? 'layouts.backoffice' : 'layouts.app';
         return view('livewire.product-form', [
             'categories' => Category::all()
-        ]);
+        ])->layout($layout);
     }
 }
