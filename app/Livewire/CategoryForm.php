@@ -30,7 +30,7 @@ class CategoryForm extends Component
             Category::create(['name' => $this->name]);
         }
 
-        return redirect('/categories');
+        return redirect('/admin/dashboard?activeTab=categories');
     }
 
     public function render()

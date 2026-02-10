@@ -43,7 +43,7 @@ class ProductList extends Component
     {
         $product = Product::find($id);
         
-        if ($this->isSeller() && $product->seller_id == auth()->id()) {
+        if (($this->isSeller() && $product->seller_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
             $product->delete();
             session()->flash('message', 'Product deleted successfully!');
         }
@@ -195,7 +195,7 @@ class ProductList extends Component
     {
         $review = Review::find($reviewId);
         
-        if ($review && $review->user_id == auth()->id()) {
+        if (($review && $review->user_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
             $review->delete();
             session()->flash('message', 'Review deleted successfully!');
         }
@@ -204,7 +204,7 @@ class ProductList extends Component
     private function resetComment()
     {
         $this->newComment = '';
-        $this->newRating = 5;
+        $this->newRating = 0;
     }
 
     public function getAverageRating($product)

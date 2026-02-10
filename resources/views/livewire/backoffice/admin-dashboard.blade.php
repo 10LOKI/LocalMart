@@ -678,8 +678,8 @@
                 <button wire:click="switchTab('products')" class="tab-button @if($activeTab === 'products') active @endif">
                     Products
                 </button>
-                <button wire:click="switchTab('orders')" class="tab-button @if($activeTab === 'orders') active @endif">
-                    Orders
+                <button wire:click="switchTab('categories')" class="tab-button @if($activeTab === 'categories') active @endif">
+                    Categories
                 </button>
                 <button wire:click="switchTab('reviews')" class="tab-button @if($activeTab === 'reviews') active @endif">
                     Reviews
@@ -713,37 +713,31 @@
 
                 <div class="stat-card terracotta">
                     <div class="stat-icon yellow">
-                        <i class="fa-solid fa-shopping-bag"></i>
+                        <i class="fa-solid fa-tags"></i>
                     </div>
-                    <div class="stat-number">{{ number_format($stats['total_orders']) }}</div>
-                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-number">{{ number_format($stats['total_categories']) }}</div>
+                    <div class="stat-label">Total Categories</div>
                 </div>
 
                 <div class="stat-card gold">
                     <div class="stat-icon purple">
-                        <i class="fa-solid fa-dollar-sign"></i>
+                        <i class="fa-solid fa-star"></i>
                     </div>
-                    <div class="stat-number">${{ number_format($stats['total_revenue'], 2) }}</div>
-                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-number">{{ number_format($stats['total_reviews']) }}</div>
+                    <div class="stat-label">Total Reviews</div>
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                 <div class="white-card">
-                    <h3 class="card-title" style="margin-bottom: 1.5rem;">Order Status</h3>
+                    <h3 class="card-title" style="margin-bottom: 1.5rem;">Category Distribution</h3>
                     <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <div class="list-item">
-                            <span class="list-label">Pending Orders</span>
-                            <span class="list-value" style="color: var(--gold);">{{ $stats['pending_orders'] }}</span>
-                        </div>
-                        <div class="list-item">
-                            <span class="list-label">Paid Orders</span>
-                            <span class="list-value" style="color: #6496C8;">{{ $stats['paid_orders'] }}</span>
-                        </div>
-                        <div class="list-item">
-                            <span class="list-label">Delivered Orders</span>
-                            <span class="list-value" style="color: var(--sage);">{{ $stats['delivered_orders'] }}</span>
-                        </div>
+                        @foreach($stats['products_per_category']->take(5) as $category)
+                            <div class="list-item">
+                                <span class="list-label">{{ $category->name }}</span>
+                                <span class="list-value" style="color: var(--sage);">{{ $category->products_count }} products</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -903,21 +897,21 @@
         </div>
     @endif
 
-    <!-- Orders Tab -->
-    @if($activeTab === 'orders')
+    <!-- Categories Tab -->
+    @if($activeTab === 'categories')
         <div class="content-container">
             <div class="white-card">
                 <div class="card-header">
-                    <h2 class="card-title">Order Management</h2>
+                    <h2 class="card-title">Category Management</h2>
                     <div class="filters-row">
-                        <input type="date" wire:model.live="dateFrom" class="date-input">
-                        <input type="date" wire:model.live="dateTo" class="date-input">
-                        <select wire:model.live="orderStatusFilter" class="filter-select">
-                            <option value="">All Status</option>
-                            <option value="En attente">En attente</option>
-                            <option value="Payée">Payée</option>
-                            <option value="Livrée">Livrée</option>
-                        </select>
+                        <input type="text" 
+                               wire:model.live="searchCategories" 
+                               placeholder="Search categories..." 
+                               class="search-input"
+                               style="padding: 0.75rem 1rem; border: 1px solid rgba(42, 42, 42, 0.1); border-radius: 4px; width: 300px; font-family: 'Outfit', sans-serif;">
+                        <a href="{{ route('categories.create') }}" class="primary-btn">
+                            <i class="fas fa-plus"></i> Add Category
+                        </a>
                     </div>
                 </div>
 
@@ -925,46 +919,44 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Order #</th>
-                                <th>Customer</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Date</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Products Count</th>
+                                <th>Created At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($orders as $order)
+                            @foreach($categories as $category)
                                 <tr>
                                     <td>
-                                        <div style="font-weight: 500;">{{ $order->order_number }}</div>
-                                    </td>
-                                    <td style="opacity: 0.7;">
-                                        {{ $order->user->name }}
+                                        <div style="font-weight: 500;">{{ $category->id }}</div>
                                     </td>
                                     <td>
-                                        ${{ number_format($order->total, 2) }}
+                                        <div style="font-weight: 500;">{{ $category->name }}</div>
                                     </td>
                                     <td>
-                                        <select wire:change="updateOrderStatus({{ $order->id }}, $event.target.value)" 
-                                                class="status-badge 
-                                                @if($order->status === 'En attente') pending
-                                                @elseif($order->status === 'Payée') paid
-                                                @else delivered
-                                                @endif"
-                                                style="border: none; cursor: pointer; font-family: 'Outfit', sans-serif;">
-                                            <option value="En attente" @if($order->status === 'En attente') selected @endif>EN ATTENTE</option>
-                                            <option value="Payée" @if($order->status === 'Payée') selected @endif>PAYÉE</option>
-                                            <option value="Livrée" @if($order->status === 'Livrée') selected @endif>LIVRÉE</option>
-                                        </select>
+                                        <span class="status-badge 
+                                            @if($category->products_count > 0) paid @else pending @endif">
+                                            {{ $category->products_count }} products
+                                        </span>
                                     </td>
                                     <td style="opacity: 0.6;">
-                                        {{ $order->created_at->format('M d, Y') }}
+                                        {{ $category->created_at->format('M d, Y') }}
                                     </td>
                                     <td>
-                                        <a href="{{ route('orders.show', $order->id) }}" class="action-btn primary">
-                                            View Details
-                                        </a>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <a href="{{ route('categories.edit', $category->id) }}" 
+                                               class="action-btn primary">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <button wire:click="deleteCategory({{ $category->id }})" 
+                                                    onclick="return confirm('Are you sure you want to delete this category?')"
+                                                    class="action-btn danger"
+                                                    @if($category->products_count > 0) disabled title="Cannot delete category with products" @endif>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -973,7 +965,7 @@
                 </div>
 
                 <div style="margin-top: 2rem;">
-                    {{ $orders->links() }}
+                    {{ $categories->links() }}
                 </div>
             </div>
         </div>
@@ -1027,13 +1019,18 @@
     @if($activeTab === 'analytics')
         <div class="content-container">
             <div class="white-card">
-                <h2 class="card-title" style="margin-bottom: 2rem;">Monthly Revenue (This Year)</h2>
+                <h2 class="card-title" style="margin-bottom: 2rem;">Category Distribution</h2>
                 <div class="chart-container">
-                    @foreach($monthly_revenue as $data)
+                    @foreach($category_distribution as $data)
                         <div class="chart-bar" 
-                             style="height: {{ $monthly_revenue->max('revenue') > 0 ? ($data->revenue / $monthly_revenue->max('revenue')) * 100 : 0 }}%"
-                             title="Month {{ $data->month }}: ${{ number_format($data->revenue, 2) }}">
+                             style="height: {{ $category_distribution->max('products_count') > 0 ? ($data->products_count / $category_distribution->max('products_count')) * 100 : 0 }}%"
+                             title="{{ $data->name }}: {{ $data->products_count }} products">
                         </div>
+                    @endforeach
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; justify-content: center;">
+                    @foreach($category_distribution as $data)
+                        <span style="font-size: 0.85rem; color: var(--charcoal); opacity: 0.7;">{{ $data->name }}</span>
                     @endforeach
                 </div>
             </div>

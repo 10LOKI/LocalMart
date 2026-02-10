@@ -6,7 +6,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\Order;
 use App\Models\Category;
 use App\Models\Review;
 use Illuminate\Support\Facades\DB;
@@ -31,8 +30,8 @@ class AdminDashboard extends Component
     public $stats = [];
 
     // Filters
-    public $orderStatusFilter = '';
     public $productStatusFilter = '';
+    public $searchCategories = '';
     public $dateFrom = '';
     public $dateTo = '';
 
@@ -51,14 +50,11 @@ class AdminDashboard extends Component
         $this->stats = [
             'total_users' => User::count(),
             'total_products' => Product::count(),
-            'total_orders' => Order::count(),
-            'total_revenue' => Order::where('status', 'Livrée')->sum('total'),
-            'pending_orders' => Order::where('status', 'En attente')->count(),
-            'paid_orders' => Order::where('status', 'Payée')->count(),
-            'delivered_orders' => Order::where('status', 'Livrée')->count(),
+            'total_categories' => Category::count(),
             'total_reviews' => Review::count(),
             'avg_rating' => Review::avg('rating') ?? 0,
             'low_stock_products' => Product::where('stock', '<', 10)->count(),
+            'products_per_category' => Category::withCount('products')->get(),
         ];
     }
 
@@ -117,11 +113,19 @@ class AdminDashboard extends Component
         $this->loadStatistics();
     }
 
-    // Order Management
-    public function updateOrderStatus($orderId, $status)
+    // Category Management
+    public function deleteCategory($categoryId)
     {
-        Order::findOrFail($orderId)->update(['status' => $status]);
-        session()->flash('message', 'Order status updated successfully!');
+        $category = Category::findOrFail($categoryId);
+        
+        // Check if category has products
+        if ($category->products()->count() > 0) {
+            session()->flash('error', 'Cannot delete category with existing products!');
+            return;
+        }
+        
+        $category->delete();
+        session()->flash('message', 'Category deleted successfully!');
         $this->loadStatistics();
     }
 
@@ -159,18 +163,11 @@ class AdminDashboard extends Component
                     ->paginate(15);
                 break;
 
-            case 'orders':
-                $data['orders'] = Order::with(['user', 'items'])
-                    ->when($this->orderStatusFilter, function ($query) {
-                        $query->where('status', $this->orderStatusFilter);
+            case 'categories':
+                $data['categories'] = Category::withCount('products')
+                    ->when($this->searchCategories, function ($query) {
+                        $query->where('name', 'like', '%' . $this->searchCategories . '%');
                     })
-                    ->when($this->dateFrom, function ($query) {
-                        $query->whereDate('created_at', '>=', $this->dateFrom);
-                    })
-                    ->when($this->dateTo, function ($query) {
-                        $query->whereDate('created_at', '<=', $this->dateTo);
-                    })
-                    ->orderBy('created_at', 'desc')
                     ->paginate(15);
                 break;
 
@@ -181,10 +178,9 @@ class AdminDashboard extends Component
                 break;
 
             case 'analytics':
-                $data['monthly_revenue'] = Order::selectRaw('MONTH(created_at) as month, SUM(total) as revenue')
-                    ->where('status', 'Livrée')
-                    ->whereYear('created_at', date('Y'))
-                    ->groupBy('month')
+                $data['category_distribution'] = Category::withCount('products')
+                    ->having('products_count', '>', 0)
+                    ->orderBy('products_count', 'desc')
                     ->get();
 
                 $data['top_products'] = Product::withCount('orderItems')
