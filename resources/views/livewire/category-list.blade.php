@@ -222,9 +222,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <div class="categories-container">
+        @if(session('message'))
+            <div style="background: #9CAF88; color: white; padding: 1rem 2rem; border-radius: 4px; margin-bottom: 2rem; text-align: center;">
+                {{ session('message') }}
+            </div>
+        @endif
+        
         <div class="categories-header">
             <h1 class="categories-title">Categories</h1>
-            <a href="{{ route('categories.create') }}" class="btn-add">
+            <a href="{{ request()->is('backoffice/*') ? route('backoffice.categories.create') : route('categories.create') }}" class="btn-add">
                 <i class="fas fa-plus"></i> Add Category
             </a>
         </div>
@@ -244,7 +250,7 @@
                             <td class="category-name">{{ $cat->name }}</td>
                             <td style="text-align: right;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
-                                    <a href="{{ route('categories.edit', $cat->id) }}" class="btn-edit">
+                                    <a href="{{ request()->is('backoffice/*') ? route('backoffice.categories.edit', $cat->id) : route('categories.edit', $cat->id) }}" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     <button 

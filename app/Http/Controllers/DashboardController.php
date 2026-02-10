@@ -18,7 +18,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        if (! $user->hasRole(['admin', 'seller', 'moderator', 'manager'])) {
+        if (! $user->hasRole(['admin', 'seller', 'moderator'])) {
             return view('dashboard');
         }
 

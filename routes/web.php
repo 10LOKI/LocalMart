@@ -24,7 +24,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if ($user && $user->hasRole(['admin', 'moderator', 'manager', 'seller'])) {
+    if ($user && $user->hasRole(['admin', 'moderator', 'seller'])) {
         return redirect()->route('backoffice.dashboard');
     }
 
