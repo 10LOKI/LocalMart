@@ -1119,22 +1119,27 @@
                                 <div class="product-badge stock-badge">OUT OF STOCK</div>
                             @endif
 
-                            @if($isSeller)
-                                <!-- Seller Action Buttons -->
+                            @hasanyrole('seller|moderator')
                                 <div class="action-buttons">
+                                    @role('seller')
                                     <a href="/products/edit/{{ $product->id }}" class="action-btn" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button 
-                                        wire:click.stop="delete({{ $product->id }})" 
-                                        class="action-btn delete" 
-                                        title="Delete"
-                                        onclick="return confirm('Are you sure you want to delete this product?')"
+                                    @endrole
+                                    @hasanyrole('seller|moderator')
+                                    <button
+                                    class="action-btn delete"
+                                    title="Delete"
+                                    onclick="confirm('Are you sure you want to delete this product?') || event.stopImmediatePropagation()"
+                                    wire:click="delete({{ $product->id }})"
                                     >
                                         <i class="fas fa-trash"></i>
                                     </button>
+                                    @endhasanyrole
+                                       
                                 </div>
-                            @else
+                            @endhasanyrole
+                            @role('customer')
                                 <!-- Customer Like Button -->
                                 <button 
                                     wire:click.stop="toggleLike({{ $product->id }})" 
@@ -1142,7 +1147,7 @@
                                 >
                                     <i class="fas fa-heart"></i>
                                 </button>
-                            @endif
+                            @endrole
                         </div>
 
                         <div class="product-info">
@@ -1357,7 +1362,7 @@
                                                             @endif
                                                         @endfor
                                                     </span>
-                                                    @if($review->user_id == auth()->id())
+                                                    @if($review->user_id === auth()->id() || auth()->user()->hasAnyRole(['moderator']))
                                                         <button 
                                                             wire:click="deleteComment({{ $review->id }})" 
                                                             class="delete-comment-btn"

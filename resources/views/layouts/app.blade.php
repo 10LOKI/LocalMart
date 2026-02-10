@@ -397,6 +397,8 @@
                                 Admin
                             @elseif(auth()->user()->hasRole('seller'))
                                 Seller
+                                @elseif(auth()->user()->hasRole('moderator'))
+                                Moderator
                             @else
                                 Customer
                             @endif
