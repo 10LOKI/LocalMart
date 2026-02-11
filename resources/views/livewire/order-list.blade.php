@@ -95,6 +95,11 @@
             color: var(--charcoal);
         }
 
+        .status-cancelled {
+            background: rgba(201, 119, 87, 0.15);
+            color: var(--terracotta);
+        }
+
         .order-info {
             display: flex;
             flex-direction: column;

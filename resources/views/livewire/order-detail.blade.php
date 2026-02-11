@@ -212,6 +212,40 @@
             text-align: center;
         }
 
+        /*the button dial l cancel */
+        .btn-cancel {
+            background: var(--terracotta);
+            color: var(--soft-white);
+            padding: 1rem 3rem;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .btn-cancel:hover {
+            background: #A85A3A;
+        }
+
+        .btn-cancel:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: var(--terracotta);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 500;
+        }
         @media (max-width: 768px) {
             .order-container {
                 padding: 2rem 1rem;
@@ -286,6 +320,7 @@
                         <option value="on_hold">On Hold</option>
                         <option value="paid">Paid</option>
                         <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                     <button wire:click="updateStatus" class="btn-update">
                         Update Status
@@ -308,6 +343,19 @@
                     </div>
                 @endforeach
             </div>
+
+            @if(session('error'))
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+                </div>
+            @endif
+
+            @if(auth()->user()->hasRole('customer') && $order->user_id === auth()->id() && $order->status === 'on_hold')
+                <button wire:click="cancelOrder" class="btn-cancel" 
+                        wire:confirm="Are you sure you want to cancel this order? Stock will be restored.">
+                    <i class="fas fa-times-circle"></i> Cancel Order
+                </button>
+            @endif
         </div>
     </div>
 </div>
