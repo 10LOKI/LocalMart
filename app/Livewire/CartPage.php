@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\DB;
 
 #[Layout('layouts.app')]
 class CartPage extends Component
@@ -38,45 +39,75 @@ class CartPage extends Component
     public function checkout()
     {
         $cart = Cart::where('user_id', auth()->id())
-                    ->where('status', 'active')
-                    ->with('items.product')
-                    ->first();
+            ->where('status', 'active')
+            ->with('items.product')
+            ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             session()->flash('error', 'Your cart is empty!');
             return;
         }
 
-        
-        $total = $cart->items->sum(function($item) {
-            return $item->price * $item->quantity;
-        });
+        DB::beginTransaction();
 
-     
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'order_number' => 'ORD-' . strtoupper(uniqid()),
-            'total' => $total,
-            'status' => 'on_hold',
-            'address' => auth()->user()->address ?? 'Default Address',
-        ]);
+        try {
+            foreach ($cart->items as $item) {
+                $product = $item->product;
 
-        
-        foreach ($cart->items as $item) {
-            $order->items()->create([
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
+                if ($item->quantity > $product->stock) {
+                    DB::rollBack();
+
+                    session()->flash(
+                        'error',
+                        "Not enough stock for {$product->name}"
+                    );
+                    return;
+                }
+            }
+
+            $total = $cart->items->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+
+            $order = Order::create([
+                'user_id' => auth()->id(),
+                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'total' => $total,
+                'status' => 'on_hold',
+                'address' => auth()->user()->address ?? 'Default Address',
             ]);
+
+            foreach ($cart->items as $item) {
+                $product = $item->product;
+
+                $product->decrement('stock', $item->quantity);
+
+                $order->items()->create([
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                ]);
+            }
+
+            $cart->update(['status' => 'ordered']);
+
+            DB::commit();
+
+            session()->flash(
+                'message',
+                'Order placed successfully! Order number: ' . $order->order_number
+            );
+
+            return redirect()->route('orders.show', $order->id);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            session()->flash('error', 'Something went wrong. Please try again.');
+            return;
         }
-
-       
-        $cart->update(['status' => 'ordered']);
-
-        session()->flash('message', 'Order placed successfully! Order number: ' . $order->order_number);
-        
-        return redirect()->route('orders.show', $order->id);
     }
+
 
     public function render()
     {
