@@ -8,6 +8,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\NewOrderNotification;
 
 #[Layout('layouts.app')]
 class CartPage extends Component
@@ -92,6 +93,15 @@ class CartPage extends Component
             $cart->update(['status' => 'ordered']);
 
             DB::commit();
+
+            // Send email to customer
+            $order->user->notify(new NewOrderNotification($order));
+
+            // Send email to sellers
+            $sellers = $order->items->pluck('product.seller')->unique()->filter();
+            foreach ($sellers as $seller) {
+                $seller->notify(new NewOrderNotification($order));
+            }
 
             session()->flash(
                 'message',
