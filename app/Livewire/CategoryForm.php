@@ -4,17 +4,20 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Category;
-use Livewire\Attributes\Layout;
-#[Layout('layouts.app')]
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class CategoryForm extends Component
 {
+    use AuthorizesRequests;
+
     public $categoryId;
     public $name;
 
     public function mount($id = null)
     {
         if ($id) {
-            $category = Category::find($id);
+            $category = Category::findOrFail($id);
+            $this->authorize('update', $category);
             $this->categoryId = $category->id;
             $this->name = $category->name;
         }
@@ -22,19 +25,28 @@ class CategoryForm extends Component
 
     public function save()
     {
-        $this->validate(['name' => 'required']);
+        $this->validate(['name' => 'required|string|max:255']);
 
         if ($this->categoryId) {
-            Category::find($this->categoryId)->update(['name' => $this->name]);
+            $category = Category::findOrFail($this->categoryId);
+            $this->authorize('update', $category);
+            $category->update(['name' => $this->name]);
         } else {
+            $this->authorize('create', Category::class);
             Category::create(['name' => $this->name]);
         }
 
-        return redirect('/admin/dashboard?activeTab=categories');
+        $route = request()->is('backoffice/*')
+            ? 'backoffice.categories.index'
+            : 'categories.index';
+
+        return redirect()->route($route);
     }
 
     public function render()
     {
-        return view('livewire.category-form');
+        $layout = request()->is('backoffice/*') ? 'layouts.backoffice' : 'layouts.app';
+
+        return view('livewire.category-form')->layout($layout);
     }
 }

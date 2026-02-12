@@ -142,7 +142,7 @@
                 <h3>Items</h3>
                 @foreach($order->items as $item)
                     <div class="item-row">
-                        <div>{{ $item->product->name ?? 'Product' }} (x{{ $item->quantity }})</div>
+                        <div>{{ $item->product?->name ?? 'Deleted Product' }} (x{{ $item->quantity }})</div>
                         <div>${{ number_format($item->price * $item->quantity, 2) }}</div>
                     </div>
                 @endforeach

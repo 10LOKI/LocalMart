@@ -208,8 +208,8 @@
                     <tbody>
                         @foreach($reviews as $review)
                         <tr>
-                            <td class="product-name">{{ $review->product->name }}</td>
-                            <td class="user-name">{{ $review->user->name }}</td>
+                            <td class="product-name">{{ $review->product?->name ?? 'Deleted Product' }}</td>
+                            <td class="user-name">{{ $review->user?->name ?? 'Deleted User' }}</td>
                             <td>
                                 <div class="rating-stars">
                                     @for($i = 1; $i <= 5; $i++)

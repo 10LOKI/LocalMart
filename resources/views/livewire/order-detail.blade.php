@@ -319,7 +319,7 @@
             <div class="order-info-grid">
                 <div class="info-item">
                     <span class="info-label">Customer</span>
-                    <span class="info-value">{{ $order->user->name }}</span>
+                    <span class="info-value">{{ $order->user?->name ?? 'Deleted User' }}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Total Amount</span>
@@ -353,7 +353,7 @@
                 @foreach($order->items as $item)
                     <div class="item-card">
                         <div class="product-name">
-                            <i class="fas fa-box"></i> {{ $item->product->name }}
+                            <i class="fas fa-box"></i> {{ $item->product?->name ?? 'Deleted Product' }}
                         </div>
                         <div class="product-price">${{ number_format($item->price, 2) }}</div>
                         <div class="product-quantity">

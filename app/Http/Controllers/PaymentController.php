@@ -20,7 +20,8 @@ class PaymentController extends Controller
         $this->authorizeOrderAccess($order);
 
         if ($order->status === 'paid') {
-            return redirect()->route('orders.show', $order->id)->with('message', 'This order is already paid.');
+            return redirect()->route($this->orderShowRouteName(), $order->id)
+                ->with('message', 'This order is already paid.');
         }
 
         $payment = Payment::updateOrCreate(
@@ -34,13 +35,13 @@ class PaymentController extends Controller
         if (config('services.stripe.fake_mode', true)) {
             $this->markOrderAsPaid($order, $payment, 'FAKE-' . strtoupper(uniqid()));
 
-            return redirect()->route('orders.show', $order->id)
+            return redirect()->route($this->orderShowRouteName(), $order->id)
                 ->with('message', 'Payment completed in local test mode.');
         }
 
         $secretKey = (string) config('services.stripe.secret_key');
         if ($secretKey === '') {
-            return redirect()->route('orders.show', $order->id)
+            return redirect()->route($this->orderShowRouteName(), $order->id)
                 ->with('error', 'Stripe is not configured. Set STRIPE_SECRET and STRIPE_KEY in your .env file.');
         }
 
@@ -62,7 +63,7 @@ class PaymentController extends Controller
         if (! $sessionResponse->successful() || ! $sessionResponse->json('url')) {
             $payment->update(['status' => 'failed']);
 
-            return redirect()->route('orders.show', $order->id)->with(
+            return redirect()->route($this->orderShowRouteName(), $order->id)->with(
                 'error',
                 'Unable to start Stripe Checkout. Please try again.'
             );
@@ -80,19 +81,19 @@ class PaymentController extends Controller
     {
         $sessionId = (string) $request->query('session_id');
         if ($sessionId === '') {
-            return redirect()->route('orders.index')->with('error', 'Missing Stripe session reference.');
+            return redirect()->route($this->orderIndexRouteName())->with('error', 'Missing Stripe session reference.');
         }
 
         $secretKey = (string) config('services.stripe.secret_key');
         if ($secretKey === '') {
-            return redirect()->route('orders.index')->with('error', 'Stripe is not configured.');
+            return redirect()->route($this->orderIndexRouteName())->with('error', 'Stripe is not configured.');
         }
 
         $sessionResponse = Http::withToken($secretKey)
             ->get('https://api.stripe.com/v1/checkout/sessions/' . $sessionId);
 
         if (! $sessionResponse->successful()) {
-            return redirect()->route('orders.index')->with('error', 'Could not validate Stripe payment.');
+            return redirect()->route($this->orderIndexRouteName())->with('error', 'Could not validate Stripe payment.');
         }
 
         $session = $sessionResponse->json();
@@ -111,12 +112,13 @@ class PaymentController extends Controller
                 'status' => 'failed',
             ]);
 
-            return redirect()->route('orders.show', $order->id)->with('error', 'Payment was not completed.');
+            return redirect()->route($this->orderShowRouteName(), $order->id)
+                ->with('error', 'Payment was not completed.');
         }
 
         $this->markOrderAsPaid($order, $payment, $sessionId);
 
-        return redirect()->route('orders.show', $order->id)->with('message', 'Payment successful.');
+        return redirect()->route($this->orderShowRouteName(), $order->id)->with('message', 'Payment successful.');
     }
 
     public function stripeCancel(Request $request): RedirectResponse
@@ -136,7 +138,7 @@ class PaymentController extends Controller
             ['order_id' => $order->id]
         );
 
-        return redirect()->route('orders.show', $order->id)->with('error', 'Payment cancelled.');
+        return redirect()->route($this->orderShowRouteName(), $order->id)->with('error', 'Payment cancelled.');
     }
 
     private function markOrderAsPaid(Order $order, Payment $payment, string $transactionId): void
@@ -171,5 +173,19 @@ class PaymentController extends Controller
         if ($order->user_id !== auth()->id() && ! auth()->user()->hasAnyRole(['admin', 'seller', 'moderator'])) {
             abort(403);
         }
+    }
+
+    private function orderShowRouteName(): string
+    {
+        return auth()->user()->hasAnyRole(['admin', 'seller', 'moderator'])
+            ? 'orders.show'
+            : 'my-orders.show';
+    }
+
+    private function orderIndexRouteName(): string
+    {
+        return auth()->user()->hasAnyRole(['admin', 'seller', 'moderator'])
+            ? 'orders.index'
+            : 'my-orders.index';
     }
 }

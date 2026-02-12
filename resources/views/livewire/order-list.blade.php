@@ -230,7 +230,7 @@
                         <div class="order-info">
                             <div class="info-row">
                                 <span class="info-label">Customer</span>
-                                <span class="info-value customer-name">{{ $order->user->name }}</span>
+                                <span class="info-value customer-name">{{ $order->user?->name ?? 'Deleted User' }}</span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Total</span>

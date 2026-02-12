@@ -42,8 +42,15 @@ class ProductList extends Component
     public function delete($id)
     {
         $product = Product::find($id);
-        
-        if (($this->isSeller() && $product->seller_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
+
+        if (! $product) {
+            return;
+        }
+
+        if (
+            ($this->isSeller() && $product->seller_id == auth()->id())
+            || auth()->user()->hasAnyRole(['admin', 'moderator'])
+        ) {
             $product->delete();
             session()->flash('message', 'Product deleted successfully!');
         }
@@ -194,8 +201,8 @@ class ProductList extends Component
     public function deleteComment($reviewId)
     {
         $review = Review::find($reviewId);
-        
-        if (($review && $review->user_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
+
+        if (($review && $review->user_id == auth()->id()) || auth()->user()->hasAnyRole(['admin', 'moderator'])) {
             $review->delete();
             session()->flash('message', 'Review deleted successfully!');
         }

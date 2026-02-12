@@ -55,6 +55,12 @@ class CartPage extends Component
             foreach ($cart->items as $item) {
                 $product = $item->product;
 
+                if (! $product) {
+                    DB::rollBack();
+                    session()->flash('error', 'A product in your cart is no longer available.');
+                    return;
+                }
+
                 if ($item->quantity > $product->stock) {
                     DB::rollBack();
 
@@ -80,6 +86,12 @@ class CartPage extends Component
 
             foreach ($cart->items as $item) {
                 $product = $item->product;
+
+                if (! $product) {
+                    DB::rollBack();
+                    session()->flash('error', 'A product in your cart is no longer available.');
+                    return;
+                }
 
                 $product->decrement('stock', $item->quantity);
 
