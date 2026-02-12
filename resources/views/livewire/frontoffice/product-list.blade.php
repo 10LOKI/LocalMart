@@ -1229,6 +1229,15 @@
                                 </div>
                             @endif
                         @endif
+                        @role('customer')
+                                <!-- Customer Like Button -->
+                                <button 
+                                    wire:click.stop="toggleLike({{ $selectedProduct->id }})" 
+                                    class="like-btn {{ $this->isLiked($selectedProduct->id) ? 'liked' : '' }}"
+                                >
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            @endrole
                     </div>
 
                     <!-- Details -->

@@ -252,46 +252,48 @@
 
         /* Footer */
         footer {
+            background: var(--charcoal);
+            color: var(--cream);
             padding: 4rem 4rem 2rem;
-            background: var(--soft-white);
-            margin-top: 4rem;
+            margin-top: 6rem;
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 3rem;
+            gap: 3rem;
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
         }
 
         .footer-brand {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
             margin-bottom: 1rem;
-            color: var(--charcoal);
+            color: var(--cream);
         }
 
         .footer-desc {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: var(--charcoal);
             opacity: 0.7;
+            line-height: 1.6;
             font-weight: 300;
+            color: var(--cream);
         }
 
         .footer-section h4 {
-            font-size: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
             margin-bottom: 1.5rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: var(--charcoal);
+            color: var(--cream);
         }
 
         .footer-links {
             list-style: none;
+            padding: 0;
         }
 
         .footer-links li {
@@ -307,18 +309,22 @@
             font-weight: 300;
         }
 
+        .footer-links a {
+            color: var(--cream);
+        }
+
         .footer-links a:hover {
             opacity: 1;
         }
 
         .footer-bottom {
-            border-top: 1px solid rgba(42, 42, 42, 0.1);
+            border-top: 1px solid rgba(250, 247, 242, 0.1);
             padding-top: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
-            color: var(--charcoal);
+            color: var(--cream);
             opacity: 0.6;
             max-width: 1400px;
             margin-left: auto;
@@ -331,7 +337,7 @@
         }
 
         .social-links a {
-            color: var(--charcoal);
+            color: var(--cream);
             opacity: 0.6;
             transition: opacity 0.3s;
             font-size: 1.2rem;
@@ -379,9 +385,10 @@
             <a href="/products">PRODUCTS</a>
             <a href="/orders">ORDERS</a>
             <a href="/reviews">REVIEWS</a>
-            <a href="/cart" class="cart-link flex items-center gap-2">
+            <a href="/cart" class="cart-link" style="position: relative; display: inline-flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>CART</span>
+                @livewire('cart-count')
             </a>
             
             <!-- Profile Dropdown -->

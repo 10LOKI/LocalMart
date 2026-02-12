@@ -18,7 +18,6 @@ class ProductList extends Component
     public $selectedCategory = '';
     public $sortBy = 'newest';
     
-    // Store only the ID instead of the full product object
     public $selectedProductId = null;
     public $showModal = false;
     
@@ -27,13 +26,11 @@ class ProductList extends Component
 
     public $quantity = 1;
 
-    // Check if current user is a seller
     public function isSeller()
     {
         return auth()->user()->hasRole('seller');
     }
 
-    // Check if current user is a customer
     public function isCustomer()
     {
         return auth()->user()->hasRole('customer');
@@ -53,13 +50,9 @@ class ProductList extends Component
     {
         $query = Product::with(['category', 'seller', 'photos', 'likes', 'reviews']);
         
-        // SELLER VIEW: Show only their products
         if ($this->isSeller()) {
             $query->where('seller_id', auth()->id());
         }
-        
-        // CUSTOMER VIEW: Show all products from all sellers
-        // (no additional filter needed)
 
         if ($this->search) {
             $query->where(function($q) {
@@ -110,10 +103,8 @@ class ProductList extends Component
 
     public function preview($productId)
     {
-        // Store only the ID
         $this->selectedProductId = $productId;
         
-        // Only set quantity for customers
         if ($this->isCustomer()) {
             $cart = auth()->user()->getOrCreateCart();
             $cartItem = $cart->items()->where('product_id', $productId)->first();
@@ -131,7 +122,6 @@ class ProductList extends Component
         $this->resetComment();
     }
 
-    // CUSTOMER ONLY: Toggle like
     public function toggleLike($productId)
     {
         if (!$this->isCustomer()) {
@@ -167,7 +157,6 @@ class ProductList extends Component
                    ->exists();
     }
 
-    // CUSTOMER ONLY: Submit review
     public function submitComment()
     {
         if (!$this->isCustomer()) {
@@ -215,7 +204,6 @@ class ProductList extends Component
         return round($product->reviews->avg('rating'), 1);
     }
 
-    // CUSTOMER ONLY: Add to cart
     public function addToCart($productId)
     {
         if (!$this->isCustomer()) {
@@ -240,9 +228,9 @@ class ProductList extends Component
                 'quantity' => $this->quantity,
                 'price' => $product->price,
             ]);
-            
             session()->flash('message', 'Product added to cart!');
         }
+        $this->dispatch('cartUpdated');
     }
     
     public function incrementQuantity()
@@ -257,7 +245,6 @@ class ProductList extends Component
         }
     }
 
-    // SELLER ONLY: Navigate to edit product
     public function editProduct($productId)
     {
         if ($this->isSeller()) {

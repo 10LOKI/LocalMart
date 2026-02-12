@@ -9,6 +9,7 @@ use App\Models\Order;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 
+
 #[Layout('layouts.app')]
 class CartPage extends Component
 {
@@ -18,8 +19,10 @@ class CartPage extends Component
         
         if ($item && $item->cart->user_id == auth()->id()) {
             $item->delete();
+          
             session()->flash('message', 'Item removed from cart!');
         }
+          $this->dispatch('cartUpdated');
     }
 
     public function updateQuantity($itemId, $quantity)
@@ -93,6 +96,8 @@ class CartPage extends Component
 
             DB::commit();
 
+            $this->dispatch('cartUpdated');
+
             session()->flash(
                 'message',
                 'Order placed successfully! Order number: ' . $order->order_number
@@ -106,6 +111,7 @@ class CartPage extends Component
             session()->flash('error', 'Something went wrong. Please try again.');
             return;
         }
+        
     }
 
 
