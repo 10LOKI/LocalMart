@@ -33,38 +33,7 @@
                 />
             </div>
 
-            <div class="relative" x-data="{ open: false }">
-                <button
-                    class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50"
-                    @click="open = !open"
-                    aria-label="Notifications"
-                >
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                        <path d="M6 17h12l-1.5-2.5a6 6 0 0 1-.7-2.8V10a6 6 0 1 0-12 0v1.7c0 1-.3 2-.8 2.8L6 17Z" />
-                        <path d="M9 17a3 3 0 0 0 6 0" />
-                    </svg>
-                    <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500"></span>
-                </button>
-                <div
-                    x-cloak
-                    x-show="open"
-                    x-transition
-                    @click.outside="open = false"
-                    class="absolute right-0 mt-3 w-72 rounded-2xl border border-slate-200 bg-white p-4 text-sm shadow-xl"
-                >
-                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Notifications</p>
-                    <div class="mt-3 space-y-3 text-sm">
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                            <p class="font-semibold text-slate-900">5 orders need review</p>
-                            <p class="mt-1 text-xs text-slate-500">Pending payments require confirmation.</p>
-                        </div>
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                            <p class="font-semibold text-slate-900">Low stock on 3 products</p>
-                            <p class="mt-1 text-xs text-slate-500">Reorder within 48 hours.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <livewire:notifications-dropdown />
 
             <div class="relative" x-data="{ open: false }">
                 <button

@@ -4,6 +4,7 @@ namespace App\Livewire\Frontoffice;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Services\RealtimeNotificationService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -98,9 +99,26 @@ class CheckoutPage extends Component
             return;
         }
 
-        session()->flash('message', 'Order placed successfully!');
+        $notificationService = app(RealtimeNotificationService::class);
+        $notificationService->sendToUser(
+            $order->user_id,
+            'Order created',
+            "Order {$order->order_number} was created. Complete payment to confirm it.",
+            'info',
+            ['order_id' => $order->id]
+        );
 
-        return redirect()->route('order.confirmation', $order->id);
+        $notificationService->sendToRoles(
+            ['admin', 'seller'],
+            'New order',
+            "A new order ({$order->order_number}) was placed.",
+            'info',
+            ['order_id' => $order->id]
+        );
+
+        session()->flash('message', 'Order created. Continue to secure payment.');
+
+        return redirect()->route('payments.checkout', $order->id);
     }
 
     public function render()

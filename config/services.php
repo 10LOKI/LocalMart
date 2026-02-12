@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'public_key' => env('STRIPE_KEY'),
+        'secret_key' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'currency' => env('STRIPE_CURRENCY', 'usd'),
+        'fake_mode' => env('PAYMENT_FAKE_MODE', true),
+    ],
+
 ];

@@ -91,6 +91,25 @@
             color: var(--cream);
         }
 
+        .pay-link {
+            margin-top: 1rem;
+            display: inline-block;
+            color: var(--soft-white);
+            background: var(--sage);
+            border: 1px solid var(--sage);
+            padding: 0.7rem 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .pay-link:hover {
+            background: var(--charcoal);
+            border-color: var(--charcoal);
+        }
+
         @media (max-width: 768px) {
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -134,6 +153,9 @@
             </div>
 
             <a href="{{ route('my-orders.index') }}" class="back-link">Back to Orders</a>
+            @if(auth()->id() === $order->user_id && $order->status === 'on_hold')
+                <a href="{{ route('payments.checkout', $order->id) }}" class="pay-link">Pay Online</a>
+            @endif
         </div>
     </div>
 </div>

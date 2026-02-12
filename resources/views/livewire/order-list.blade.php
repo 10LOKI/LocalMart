@@ -95,6 +95,11 @@
             color: var(--charcoal);
         }
 
+        .status-cancelled {
+            background: rgba(201, 119, 87, 0.15);
+            color: var(--terracotta);
+        }
+
         .order-info {
             display: flex;
             flex-direction: column;
@@ -237,7 +242,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('backoffice.orders.show', $order->id) }}" class="btn-view">
+                        <a href="{{ route('orders.show', $order->id) }}" class="btn-view">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                     </div>
