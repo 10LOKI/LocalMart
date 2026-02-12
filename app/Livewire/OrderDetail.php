@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Order;
 use App\Models\User;
 use Livewire\Attributes\Layout;
+use App\Notifications\OrderStatusChanged;
 #[Layout('layouts.app')]
 
 class OrderDetail extends Component
@@ -21,7 +22,12 @@ class OrderDetail extends Component
 
     public function updateStatus()
     {
+        $oldStatus = $this->order->status;
         $this->order->update(['status' => $this->status]);
+        
+        // Envoyer email au client
+        $this->order->user->notify(new OrderStatusChanged($this->order, $oldStatus));
+        
         session()->flash('message', 'Status updated');
     }
 

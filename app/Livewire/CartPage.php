@@ -8,6 +8,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\NewOrderNotification;
 
 #[Layout('layouts.app')]
 class CartPage extends Component
@@ -93,6 +94,15 @@ class CartPage extends Component
 
             DB::commit();
 
+            // Send email to customer
+            $order->user->notify(new NewOrderNotification($order));
+
+            // Send email to sellers
+            $sellers = $order->items->pluck('product.seller')->unique()->filter();
+            foreach ($sellers as $seller) {
+                $seller->notify(new NewOrderNotification($order));
+            }
+
             session()->flash(
                 'message',
                 'Order placed successfully! Order number: ' . $order->order_number
@@ -102,8 +112,9 @@ class CartPage extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-
-            session()->flash('error', 'Something went wrong. Please try again.');
+            
+            session()->flash('error', 'Error: ' . $e->getMessage());
+            \Log::error('Checkout error: ' . $e->getMessage());
             return;
         }
     }
