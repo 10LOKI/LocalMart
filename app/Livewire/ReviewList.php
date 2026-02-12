@@ -16,8 +16,10 @@ class ReviewList extends Component
 
     public function render()
     {
-        return view('livewire.review-list', [
-            'reviews' => Review::with('product', 'user')->get()
-        ]);
+            return view('livewire.frontoffice.review-list', [
+        'reviews' => Review::with('product', 'user')
+            ->where('user_id', auth()->id())
+            ->get()
+    ]);
     }
 }
