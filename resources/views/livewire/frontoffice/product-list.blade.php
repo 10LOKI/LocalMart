@@ -247,45 +247,6 @@
             gap: 2rem;
         }
 
-        .pagination {
-            margin-top: 3rem;
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .page-btn {
-            min-width: 42px;
-            height: 42px;
-            border: 1px solid rgba(42, 42, 42, 0.2);
-            background: var(--soft-white);
-            color: var(--charcoal);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .page-btn:hover:not(.active):not(:disabled) {
-            background: var(--cream);
-            border-color: var(--gold);
-            color: var(--charcoal);
-        }
-
-        .page-btn.active {
-            background: var(--gold);
-            border-color: var(--gold);
-            color: var(--charcoal);
-        }
-
-        .page-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
         .product-card {
             background: var(--soft-white);
             border-radius: 0;
@@ -832,315 +793,6 @@
             color: var(--cream);
         }
 
-<<<<<<< HEAD
-        .product-price {
-            font-size: 1.75rem;
-            font-weight: 400;
-            color: var(--charcoal);
-        }
-
-        .stock-info {
-            font-size: 0.85rem;
-            color: var(--sage);
-            font-weight: 500;
-        }
-
-        .stock-low {
-            color: var(--terracotta);
-            opacity: 1;
-            font-weight: 500;
-        }
-
-        /* Like Button on Card */
-        .like-btn {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            background: var(--soft-white);
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px var(--shadow);
-            z-index: 2;
-        }
-
-        .like-btn:hover {
-            transform: scale(1.1);
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .like-btn.liked {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .like-btn i {
-            font-size: 1.1rem;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(42, 42, 42, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            animation: fadeInOverlay 0.3s ease-out;
-        }
-
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .modal-container {
-            background: var(--soft-white);
-            border-radius: 8px;
-            max-width: 1100px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: var(--charcoal);
-            color: var(--cream);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            background: var(--gold);
-            transform: rotate(90deg);
-        }
-
-        .modal-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            padding: 3rem;
-        }
-
-        .modal-image-section {
-            position: relative;
-        }
-
-        .modal-image {
-            width: 100%;
-            height: 500px;
-            border-radius: 4px;
-            overflow: hidden;
-            background: var(--cream);
-        }
-
-        .modal-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-like-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--soft-white);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        .modal-like-btn:hover {
-            transform: scale(1.1);
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .modal-like-btn.liked {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .modal-like-btn i {
-            font-size: 1.3rem;
-        }
-
-        .modal-info-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-category {
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            color: var(--charcoal);
-            line-height: 1.2;
-        }
-
-        .modal-price {
-            font-size: 2rem;
-            font-weight: 500;
-            color: var(--charcoal);
-            margin-bottom: 1rem;
-        }
-
-        .modal-description {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--charcoal);
-            opacity: 0.8;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(42, 42, 42, 0.1);
-        }
-
-        .modal-meta {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .meta-item {
-            background: var(--cream);
-            padding: 1rem;
-            border-radius: 4px;
-        }
-
-        .meta-label {
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: var(--charcoal);
-            opacity: 0.6;
-            margin-bottom: 0.3rem;
-        }
-
-        .meta-value {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--charcoal);
-        }
-
-        /* Quantity Control */
-        .quantity-control {
-            margin: 2rem 0;
-        }
-
-        .quantity-label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            margin-bottom: 0.75rem;
-            color: var(--charcoal);
-            opacity: 0.7;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .quantity-btn {
-            width: 45px;
-            height: 45px;
-            border: 1px solid rgba(42, 42, 42, 0.2);
-            background: var(--soft-white);
-            color: var(--charcoal);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quantity-btn:hover:not(:disabled) {
-            background: var(--charcoal);
-            color: var(--cream);
-            border-color: var(--charcoal);
-        }
-
-        .quantity-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .quantity-display {
-            width: 80px;
-            height: 45px;
-            border: 1px solid rgba(42, 42, 42, 0.2);
-            background: var(--cream);
-            color: var(--charcoal);
-            font-size: 1.1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-=======
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         /* Reviews Section */
         .reviews-section {
             margin-top: 3rem;
@@ -1445,11 +1097,7 @@
                     Featured Collection
                 @endif
             </h2>
-<<<<<<< HEAD
-            <div class="product-count">{{ $products->total() }} {{ Str::plural('product', $products->total()) }}</div>
-=======
             <span class="product-count">{{ $products->count() }} {{ $products->count() == 1 ? 'item' : 'items' }}</span>
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         </div>
 
         @if($products->count() > 0)
@@ -1539,34 +1187,6 @@
                     </div>
                 @endforeach
             </div>
-            @if($products->hasPages())
-                <div class="pagination">
-                    <button
-                        class="page-btn"
-                        wire:click="previousPage"
-                        @disabled($products->onFirstPage())
-                    >
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-
-                    @foreach(range(1, $products->lastPage()) as $page)
-                        <button
-                            class="page-btn {{ $page === $products->currentPage() ? 'active' : '' }}"
-                            wire:click="gotoPage({{ $page }})"
-                        >
-                            {{ $page }}
-                        </button>
-                    @endforeach
-
-                    <button
-                        class="page-btn"
-                        wire:click="nextPage"
-                        @disabled(! $products->hasMorePages())
-                    >
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            @endif
         @else
             <div class="empty-state">
                 <div class="empty-state-icon">
@@ -1638,13 +1258,8 @@
                             </div>
                         </div>
 
-<<<<<<< HEAD
-                        <!-- Quantity Control -->
-                        @role('customer')
-=======
                         <!-- Quantity Control (Customer Only) -->
                         @if($isCustomer)
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
                             <div class="quantity-control">
                                 <div class="quantity-label">QUANTITY</div>
                                 <div class="quantity-selector">
@@ -1665,15 +1280,8 @@
                                     </button>
                                 </div>
                             </div>
-<<<<<<< HEAD
-                        @endrole
-
-                        <!-- Action Buttons -->
-                        @role('customer')
-=======
 
                             <!-- Action Buttons -->
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
                             <div class="modal-actions">
                                 <button wire:click="addToCart({{ $selectedProduct->id }})" class="modal-add-to-cart-btn">
                                     <i class="fas fa-shopping-cart"></i> ADD TO CART
@@ -1785,7 +1393,7 @@
     @if($isSeller)
         <div style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9997;">
             <a 
-                href="{{ route('products.create') }}" 
+                href="/products/create" 
                 style="
                     background: var(--charcoal);
                     color: var(--cream);
@@ -1808,10 +1416,4 @@
             </a>
         </div>
     @endif
-<<<<<<< HEAD
-
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </div>
-=======
-</div>
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face

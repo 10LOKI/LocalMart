@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Livewire\Frontoffice;
+namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Order;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 
@@ -30,17 +31,6 @@ class CartPage extends Component
         $item = CartItem::find($itemId);
         
         if ($item && $item->cart->user_id == auth()->id()) {
-            $product = $item->product;
-            if (! $product) {
-                session()->flash('error', 'This product is no longer available.');
-                return;
-            }
-
-            if (! is_null($product->stock) && $quantity > $product->stock) {
-                session()->flash('error', 'Not enough stock available for this product.');
-                return;
-            }
-
             $item->update(['quantity' => $quantity]);
             session()->flash('message', 'Quantity updated!');
         }
@@ -53,14 +43,11 @@ class CartPage extends Component
             ->with('items.product')
             ->first();
 
-        if (! $cart || $cart->items->isEmpty()) {
+        if (!$cart || $cart->items->isEmpty()) {
             session()->flash('error', 'Your cart is empty!');
             return;
         }
 
-<<<<<<< HEAD:app/Livewire/Frontoffice/CartPage.php
-        return redirect()->route('checkout');
-=======
         DB::beginTransaction();
 
         try {
@@ -119,7 +106,6 @@ class CartPage extends Component
             session()->flash('error', 'Something went wrong. Please try again.');
             return;
         }
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face:app/Livewire/CartPage.php
     }
 
 

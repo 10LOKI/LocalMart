@@ -144,7 +144,6 @@
             text-transform: uppercase;
             position: relative;
             overflow: hidden;
-            z-index: 1;
         }
 
         .btn-update::before {
@@ -165,11 +164,6 @@
 
         .btn-update:hover {
             color: var(--charcoal);
-        }
-
-        .btn-update:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .items-section-title {
@@ -318,30 +312,22 @@
                 </div>
             </div>
 
+            @can('update order status')
             <div class="status-control">
                 <div class="status-control-title">Update Order Status</div>
-<<<<<<< HEAD
-                <form action="{{ route('backoffice.orders.updateStatus', $order->id) }}" method="POST" class="status-form">
-                    @csrf
-                    <select name="status" class="status-select">
-                        <option value="on_hold" {{ $order->status == 'on_hold' ? 'selected' : '' }}>On Hold</option>
-                        <option value="paid" {{ $order->status == 'paid' ? 'selected' : '' }}>Paid</option>
-                        <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-=======
                 <div class="status-form">
                     <select wire:model="status" class="status-select">
                         <option value="on_hold">On Hold</option>
                         <option value="paid">Paid</option>
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
                     </select>
-                    <button type="submit" class="btn-update">
-                        UPDATE STATUS
+                    <button wire:click="updateStatus" class="btn-update">
+                        Update Status
                     </button>
-                </form>
-                @error('status') <span style="color: red; font-size: 0.9rem;">{{ $message }}</span> @enderror
+                </div>
             </div>
+            @endcan
 
             <h3 class="items-section-title">Order Items</h3>
             <div class="items-grid">

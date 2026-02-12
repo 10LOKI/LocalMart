@@ -375,26 +375,14 @@
         
         @auth
         <div class="nav-links">
-            @if(auth()->user()->hasRole('customer'))
-                <a href="{{ route('categories.index') }}">CATEGORIES</a>
-                <a href="{{ route('products.index') }}">PRODUCTS</a>
-                <a href="{{ route('my-orders.index') }}">MY ORDERS</a>
-                <a href="{{ route('reviews.index') }}">REVIEWS</a>
-                <a href="{{ route('cart') }}" class="cart-link flex items-center gap-2">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span>CART</span>
-                </a>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['seller', 'admin']))
-                <a href="{{ route('backoffice.products.index') }}">SELLER PRODUCTS</a>
-                <a href="{{ route('backoffice.categories.index') }}">SELLER CATEGORIES</a>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['moderator', 'admin']))
-                <a href="{{ route('backoffice.users.index') }}">MODERATE USERS</a>
-                <a href="{{ route('backoffice.reviews.index') }}">MODERATE REVIEWS</a>
-            @endif
+            <a href="/categories">CATEGORIES</a>
+            <a href="/products">PRODUCTS</a>
+            <a href="/orders">ORDERS</a>
+            <a href="/reviews">REVIEWS</a>
+            <a href="/cart" class="cart-link flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>CART</span>
+            </a>
             
             <!-- Profile Dropdown -->
             <div class="profile-dropdown">
@@ -407,8 +395,6 @@
                         <span class="profile-role">
                             @if(auth()->user()->hasRole('admin'))
                                 Admin
-                            @elseif(auth()->user()->hasRole('moderator'))
-                                Moderator
                             @elseif(auth()->user()->hasRole('seller'))
                                 Seller
                                 @elseif(auth()->user()->hasRole('moderator'))
@@ -435,16 +421,14 @@
                             <i class="fa-solid fa-user"></i>
                             <span>My Profile</span>
                         </a>
-                        @if(auth()->user()->hasRole('customer'))
-                            <a href="{{ route('my-orders.index') }}" class="dropdown-item">
-                                <i class="fa-solid fa-receipt"></i>
-                                <span>My Orders</span>
-                            </a>
-                            <a href="{{ route('cart') }}" class="dropdown-item">
-                                <i class="fa-solid fa-shopping-cart"></i>
-                                <span>Shopping Cart</span>
-                            </a>
-                        @endif
+                        <a href="/orders" class="dropdown-item">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>My Orders</span>
+                        </a>
+                        <a href="/cart" class="dropdown-item">
+                            <i class="fa-solid fa-shopping-cart"></i>
+                            <span>Shopping Cart</span>
+                        </a>
                     </div>
 
                     <div class="dropdown-divider"></div>
@@ -453,15 +437,11 @@
                     @if(auth()->user()->hasRole('admin'))
                     <div class="dropdown-section">
                         <div class="dropdown-section-title">Admin</div>
-                        <a href="{{ route('backoffice.categories.index') }}" class="dropdown-item">
+                        <a href="/categories" class="dropdown-item">
                             <i class="fa-solid fa-tags"></i>
                             <span>Manage Categories</span>
                         </a>
-<<<<<<< HEAD
-                        <a href="{{ route('backoffice.dashboard') }}" class="dropdown-item">
-=======
                         <a href="/admin/dashboard" class="dropdown-item">
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
                             <i class="fa-solid fa-chart-line"></i>
                             <span>Dashboard</span>
                         </a>
@@ -472,32 +452,17 @@
                     @if(auth()->user()->hasRole('seller'))
                     <div class="dropdown-section">
                         <div class="dropdown-section-title">Seller</div>
-                        <a href="{{ route('backoffice.products.index') }}" class="dropdown-item">
+                        <a href="/products" class="dropdown-item">
                             <i class="fa-solid fa-box"></i>
                             <span>My Products</span>
                         </a>
-                        <a href="{{ route('backoffice.products.create') }}" class="dropdown-item">
+                        <a href="/products/create" class="dropdown-item">
                             <i class="fa-solid fa-plus-circle"></i>
                             <span>Add Product</span>
                         </a>
-                        <a href="{{ route('backoffice.orders.index') }}" class="dropdown-item">
+                        <a href="/orders" class="dropdown-item">
                             <i class="fa-solid fa-truck"></i>
                             <span>Manage Orders</span>
-                        </a>
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    @endif
-
-                    @if(auth()->user()->hasRole('moderator'))
-                    <div class="dropdown-section">
-                        <div class="dropdown-section-title">Moderator</div>
-                        <a href="{{ route('backoffice.users.index') }}" class="dropdown-item">
-                            <i class="fa-solid fa-user-shield"></i>
-                            <span>Moderate Users</span>
-                        </a>
-                        <a href="{{ route('backoffice.reviews.index') }}" class="dropdown-item">
-                            <i class="fa-solid fa-star"></i>
-                            <span>Moderate Reviews</span>
                         </a>
                     </div>
                     <div class="dropdown-divider"></div>
@@ -558,7 +523,7 @@
                 <h4>ACCOUNT</h4>
                 <ul class="footer-links">
                     @auth
-                    <li><a href="/my-orders">My Orders</a></li>
+                    <li><a href="/orders">My Orders</a></li>
                     <li><a href="/cart">My Cart</a></li>
                     <li><a href="/profile">Profile</a></li>
                     @else

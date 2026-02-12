@@ -5,22 +5,18 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Like;
+use App\Models\Review;
+use App\Models\Cart;
+use App\Models\Order;
 use Livewire\Attributes\Layout;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-#[Layout('layouts.backoffice')]
+#[Layout('layouts.app')]
 class ProductList extends Component
 {
-    use AuthorizesRequests;
-
     public $search = '';
     public $selectedCategory = '';
     public $sortBy = 'newest';
-<<<<<<< HEAD
-
-    public $quantity = 1;
-
-=======
     
     // Store only the ID instead of the full product object
     public $selectedProductId = null;
@@ -28,7 +24,6 @@ class ProductList extends Component
     
     public $newComment = '';
     public $newRating = 0;
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
 
     public $quantity = 1;
 
@@ -47,41 +42,19 @@ class ProductList extends Component
     public function delete($id)
     {
         $product = Product::find($id);
-<<<<<<< HEAD
-
-        if (! $product) {
-            return;
-=======
         
         if (($this->isSeller() && $product->seller_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
             $product->delete();
             session()->flash('message', 'Product deleted successfully!');
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         }
-
-        $this->authorize('delete', $product);
-
-        if ($product->orderItems()->exists()) {
-            session()->flash('error', 'Cannot delete a product with existing orders.');
-            return;
-        }
-
-        $product->delete();
-        session()->flash('message', 'Product deleted successfully!');
     }
-
+ 
     public function render()
     {
-<<<<<<< HEAD
-        $query = Product::with(['category', 'seller', 'photos']);
-
-        if (auth()->user()->hasRole('seller')) {
-=======
         $query = Product::with(['category', 'seller', 'photos', 'likes', 'reviews']);
         
         // SELLER VIEW: Show only their products
         if ($this->isSeller()) {
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
             $query->where('seller_id', auth()->id());
         }
         
@@ -98,7 +71,7 @@ class ProductList extends Component
         if ($this->selectedCategory) {
             $query->where('category_id', $this->selectedCategory);
         }
-
+    
         switch ($this->sortBy) {
             case 'price_low':
                 $query->orderBy('price', 'asc');
@@ -115,9 +88,6 @@ class ProductList extends Component
                 break;
         }
 
-<<<<<<< HEAD
-        return view('livewire.product-list', [
-=======
         $selectedProduct = null;
         if ($this->selectedProductId) {
             $selectedProduct = Product::with([
@@ -130,7 +100,6 @@ class ProductList extends Component
         }
 
         return view('livewire.frontoffice.product-list', [
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
             'products' => $query->get(),
             'categories' => Category::all(),
             'selectedProduct' => $selectedProduct,
@@ -150,11 +119,6 @@ class ProductList extends Component
             $cartItem = $cart->items()->where('product_id', $productId)->first();
             $this->quantity = $cartItem ? $cartItem->quantity : 1;
         }
-        
-        $cart = auth()->user()->getOrCreateCart();
-        $cartItem = $cart->items()->where('product_id', $productId)->first();
-        
-        $this->quantity = $cartItem ? $cartItem->quantity : 1;
         
         $this->showModal = true;
         $this->resetComment();
@@ -254,14 +218,11 @@ class ProductList extends Component
     // CUSTOMER ONLY: Add to cart
     public function addToCart($productId)
     {
-<<<<<<< HEAD
-=======
         if (!$this->isCustomer()) {
             session()->flash('error', 'Only customers can add products to cart.');
             return;
         }
 
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         $cart = auth()->user()->getOrCreateCart();
                 
         $item = $cart->items()
@@ -283,20 +244,6 @@ class ProductList extends Component
             session()->flash('message', 'Product added to cart!');
         }
     }
-<<<<<<< HEAD
-    public function incrementQuantity()
-{
-    $this->quantity++;
-}
-
-public function decrementQuantity()
-{
-    if ($this->quantity > 1) {
-        $this->quantity--;
-    }
-}
-}
-=======
     
     public function incrementQuantity()
     {
@@ -318,4 +265,3 @@ public function decrementQuantity()
         }
     }
 }
->>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
