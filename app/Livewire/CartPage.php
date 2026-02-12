@@ -9,6 +9,8 @@ use App\Models\Order;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\NewOrderNotification;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 #[Layout('layouts.app')]
 class CartPage extends Component
@@ -94,13 +96,15 @@ class CartPage extends Component
 
             DB::commit();
 
-            // Send email to customer
-            $order->user->notify(new NewOrderNotification($order));
-
-            // Send email to sellers
-            $sellers = $order->items->pluck('product.seller')->unique()->filter();
-            foreach ($sellers as $seller) {
-                $seller->notify(new NewOrderNotification($order));
+            // Send emails (non-blocking)
+            try {
+                $order->user->notify(new NewOrderNotification($order));
+                $sellers = $order->items->pluck('product.seller')->unique()->filter();
+                foreach ($sellers as $seller) {
+                    $seller->notify(new NewOrderNotification($order));
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Email notification failed: ' . $e->getMessage());
             }
 
             session()->flash(
@@ -119,6 +123,48 @@ class CartPage extends Component
         }
     }
 
+    public function checkoutWithStripe()
+    {
+        $cart = Cart::where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->with('items.product')
+            ->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            session()->flash('error', 'Your cart is empty!');
+            return;
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $line_items = [];
+        foreach ($cart->items as $item) {
+            $line_items[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $item->product->name,
+                    ],
+                    'unit_amount' => $item->price * 100, // Convert to cents
+                ],
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        $session = StripeSession::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $line_items,
+            'mode' => 'payment',
+            'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('cart'),
+            'metadata' => [
+                'cart_id' => $cart->id,
+                'user_id' => auth()->id(),
+            ],
+        ]);
+
+        return redirect($session->url);
+    }
 
     public function render()
     {

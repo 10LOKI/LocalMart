@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
@@ -55,5 +56,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cart', CartPage::class)->name('cart');
 });
+
+
+
+Route::get('/checkout', [CheckoutController::class, 'index']);
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout.payment');
+
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
 
 require __DIR__.'/auth.php';

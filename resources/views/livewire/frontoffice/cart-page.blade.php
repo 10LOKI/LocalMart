@@ -270,6 +270,25 @@
             cursor: not-allowed;
         }
 
+        .stripe-btn {
+            width: 100%;
+            background: #635BFF;
+            color: white;
+            padding: 1.25rem;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .stripe-btn:hover {
+            background: #4F46E5;
+        }
+
         .continue-shopping {
             width: 100%;
             background: transparent;
@@ -452,8 +471,12 @@
                         <span class="total-value">${{ number_format($total, 2) }}</span>
                     </div>
 
+                    <button wire:click="checkoutWithStripe" class="stripe-btn">
+                        <i class="fab fa-stripe"></i> Pay with Stripe
+                    </button>
+
                     <button wire:click="checkout" class="checkout-btn">
-                        <i class="fas fa-lock"></i> Proceed to Checkout
+                        <i class="fas fa-money-bill-wave"></i> Cash on Delivery
                     </button>
 
                     <a href="/products" class="continue-shopping">
