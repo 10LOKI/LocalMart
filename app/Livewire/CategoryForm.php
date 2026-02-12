@@ -53,8 +53,12 @@ class CategoryForm extends Component
             session()->flash('message', 'Category created successfully!');
         }
 
+<<<<<<< HEAD
         $route = request()->is('backoffice/*') ? 'backoffice.categories.index' : 'categories.index';
         return redirect()->route($route);
+=======
+        return redirect('/admin/dashboard?activeTab=categories');
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
     }
 
     public function render()

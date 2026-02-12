@@ -9,6 +9,7 @@ use App\Livewire\CategoryForm;
 use App\Livewire\ProductForm;
 use App\Livewire\OrderList;
 use App\Livewire\OrderDetail;
+<<<<<<< HEAD
 use App\Livewire\Frontoffice\ProductList as FrontofficeProductList;
 use App\Livewire\Frontoffice\ReviewList as FrontofficeReviewList;
 use App\Livewire\Frontoffice\CartPage;
@@ -18,6 +19,11 @@ use App\Livewire\Frontoffice\CheckoutPage;
 use App\Livewire\Frontoffice\OrderConfirmation;
 use App\Livewire\Frontoffice\OrderDetail as FrontofficeOrderDetail;
 use App\Livewire\UserModeration;
+=======
+use App\Livewire\ReviewList;
+use App\Livewire\CartPage;
+use App\Livewire\AdminDashboard;
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
 
 Route::get('/', function () {
     return auth()->check()
@@ -41,10 +47,40 @@ Route::middleware('auth')->group(function () {
     // Removed old orders routes - now handled in frontoffice
 });
 
+<<<<<<< HEAD
 // Front office routes (customers only)
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/products', FrontofficeProductList::class)->name('products.index');
     Route::get('/reviews', FrontofficeReviewList::class)->name('reviews.index');
+=======
+
+Route::middleware('auth')->group(function () {
+
+    // Admin Dashboard - Only for admin role
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', AdminDashboard::class)->name('admin.dashboard');
+    });
+
+    Route::get('/categories', CategoryList::class)->name('categories.index');
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/categories/create', CategoryForm::class)->name('categories.create');
+        Route::get('/categories/edit/{id}', CategoryForm::class)->name('categories.edit');
+    });
+
+    Route::get('/products', ProductList::class)->name('products.index');
+
+    Route::middleware('role:seller')->group(function () {    
+        Route::get('/products/create', ProductForm::class)->name('products.create');
+        Route::get('/products/edit/{id}', ProductForm::class)->name('products.edit');
+    });
+
+    Route::get('/orders', OrderList::class)->name('orders.index');
+    Route::get('/orders/{id}', OrderDetail::class)->name('orders.show');
+
+    Route::get('/reviews', ReviewList::class)->name('reviews.index');
+
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
     Route::get('/cart', CartPage::class)->name('cart');
     Route::get('/checkout', CheckoutPage::class)->name('checkout');
     Route::get('/order-confirmation/{order}', OrderConfirmation::class)->name('order.confirmation');
@@ -53,6 +89,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/my-orders/{id}', FrontofficeOrderDetail::class)->name('my-orders.show');
 });
 
+<<<<<<< HEAD
 // backoffice avec middleware dial auth et roles
 Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice') -> name('backoffice.') -> group(function ()
 {
@@ -107,3 +144,6 @@ Route::middleware(['auth','role:admin|seller|moderator']) -> prefix('backoffice'
     });
 });
 require __DIR__.'/auth.php';
+=======
+require __DIR__.'/auth.php';
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face

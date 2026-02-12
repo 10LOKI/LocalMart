@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\DB;
 
 #[Layout('layouts.app')]
 class CartPage extends Component
@@ -57,8 +58,70 @@ class CartPage extends Component
             return;
         }
 
+<<<<<<< HEAD:app/Livewire/Frontoffice/CartPage.php
         return redirect()->route('checkout');
+=======
+        DB::beginTransaction();
+
+        try {
+            foreach ($cart->items as $item) {
+                $product = $item->product;
+
+                if ($item->quantity > $product->stock) {
+                    DB::rollBack();
+
+                    session()->flash(
+                        'error',
+                        "Not enough stock for {$product->name}"
+                    );
+                    return;
+                }
+            }
+
+            $total = $cart->items->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+
+            $order = Order::create([
+                'user_id' => auth()->id(),
+                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'total' => $total,
+                'status' => 'on_hold',
+                'address' => auth()->user()->address ?? 'Default Address',
+            ]);
+
+            foreach ($cart->items as $item) {
+                $product = $item->product;
+
+                $product->decrement('stock', $item->quantity);
+
+                $order->items()->create([
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                ]);
+            }
+
+            $cart->update(['status' => 'ordered']);
+
+            DB::commit();
+
+            session()->flash(
+                'message',
+                'Order placed successfully! Order number: ' . $order->order_number
+            );
+
+            return redirect()->route('orders.show', $order->id);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            session()->flash('error', 'Something went wrong. Please try again.');
+            return;
+        }
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face:app/Livewire/CartPage.php
     }
+
 
     public function render()
     {

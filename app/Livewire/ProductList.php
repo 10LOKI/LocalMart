@@ -16,16 +16,47 @@ class ProductList extends Component
     public $search = '';
     public $selectedCategory = '';
     public $sortBy = 'newest';
+<<<<<<< HEAD
 
     public $quantity = 1;
 
+=======
+    
+    // Store only the ID instead of the full product object
+    public $selectedProductId = null;
+    public $showModal = false;
+    
+    public $newComment = '';
+    public $newRating = 0;
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
+
+    public $quantity = 1;
+
+    // Check if current user is a seller
+    public function isSeller()
+    {
+        return auth()->user()->hasRole('seller');
+    }
+
+    // Check if current user is a customer
+    public function isCustomer()
+    {
+        return auth()->user()->hasRole('customer');
+    }
 
     public function delete($id)
     {
         $product = Product::find($id);
+<<<<<<< HEAD
 
         if (! $product) {
             return;
+=======
+        
+        if (($this->isSeller() && $product->seller_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
+            $product->delete();
+            session()->flash('message', 'Product deleted successfully!');
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         }
 
         $this->authorize('delete', $product);
@@ -41,11 +72,21 @@ class ProductList extends Component
 
     public function render()
     {
+<<<<<<< HEAD
         $query = Product::with(['category', 'seller', 'photos']);
 
         if (auth()->user()->hasRole('seller')) {
+=======
+        $query = Product::with(['category', 'seller', 'photos', 'likes', 'reviews']);
+        
+        // SELLER VIEW: Show only their products
+        if ($this->isSeller()) {
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
             $query->where('seller_id', auth()->id());
         }
+        
+        // CUSTOMER VIEW: Show all products from all sellers
+        // (no additional filter needed)
 
         if ($this->search) {
             $query->where(function($q) {
@@ -74,21 +115,41 @@ class ProductList extends Component
                 break;
         }
 
+<<<<<<< HEAD
         return view('livewire.product-list', [
+=======
+        $selectedProduct = null;
+        if ($this->selectedProductId) {
+            $selectedProduct = Product::with([
+                'photos', 
+                'category', 
+                'seller',
+                'reviews.user',
+                'likes'
+            ])->find($this->selectedProductId);
+        }
+
+        return view('livewire.frontoffice.product-list', [
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
             'products' => $query->get(),
-            'categories' => Category::all()
+            'categories' => Category::all(),
+            'selectedProduct' => $selectedProduct,
+            'isSeller' => $this->isSeller(),
+            'isCustomer' => $this->isCustomer()
         ]);
     }
 
     public function preview($productId)
     {
-        $this->selectedProduct = Product::with([
-            'photos', 
-            'category', 
-            'seller',
-            'reviews.user',
-            'likes'
-        ])->findOrFail($productId);
+        // Store only the ID
+        $this->selectedProductId = $productId;
+        
+        // Only set quantity for customers
+        if ($this->isCustomer()) {
+            $cart = auth()->user()->getOrCreateCart();
+            $cartItem = $cart->items()->where('product_id', $productId)->first();
+            $this->quantity = $cartItem ? $cartItem->quantity : 1;
+        }
         
         $cart = auth()->user()->getOrCreateCart();
         $cartItem = $cart->items()->where('product_id', $productId)->first();
@@ -102,12 +163,18 @@ class ProductList extends Component
     public function closeModal()
     {
         $this->showModal = false;
-        $this->selectedProduct = null;
+        $this->selectedProductId = null;
         $this->resetComment();
     }
 
+    // CUSTOMER ONLY: Toggle like
     public function toggleLike($productId)
     {
+        if (!$this->isCustomer()) {
+            session()->flash('error', 'Only customers can like products.');
+            return;
+        }
+
         $userId = auth()->id();
         $like = Like::where('product_id', $productId)
                     ->where('user_id', $userId)
@@ -123,34 +190,38 @@ class ProductList extends Component
             ]);
             session()->flash('message', "You Liked The Product, We'd Love To Hear Your Review About It.");
         }
-       
-        if ($this->selectedProduct && $this->selectedProduct->id == $productId) {
-            $this->selectedProduct->load('likes');
-        }
     }
 
     public function isLiked($productId)
     {
+        if (!$this->isCustomer()) {
+            return false;
+        }
+        
         return Like::where('product_id', $productId)
                    ->where('user_id', auth()->id())
                    ->exists();
     }
 
+    // CUSTOMER ONLY: Submit review
     public function submitComment()
     {
+        if (!$this->isCustomer()) {
+            session()->flash('error', 'Only customers can submit reviews.');
+            return;
+        }
+
         $this->validate([
             'newComment' => 'required|min:3|max:500',
             'newRating' => 'required|integer|min:1|max:5'
         ]);
 
         Review::create([
-            'product_id' => $this->selectedProduct->id,
+            'product_id' => $this->selectedProductId,
             'user_id' => auth()->id(),
             'rating' => $this->newRating,
             'comment' => $this->newComment
         ]);
-       
-        $this->selectedProduct->load('reviews.user');
         
         session()->flash('message', 'Review submitted successfully!');
         $this->resetComment();
@@ -160,9 +231,8 @@ class ProductList extends Component
     {
         $review = Review::find($reviewId);
         
-        if ($review && $review->user_id == auth()->id()) {
+        if (($review && $review->user_id == auth()->id())|| auth()->user()->hasRole('moderator')) {
             $review->delete();
-            $this->selectedProduct->load('reviews.user');
             session()->flash('message', 'Review deleted successfully!');
         }
     }
@@ -170,7 +240,7 @@ class ProductList extends Component
     private function resetComment()
     {
         $this->newComment = '';
-        $this->newRating = 5;
+        $this->newRating = 0;
     }
 
     public function getAverageRating($product)
@@ -181,8 +251,17 @@ class ProductList extends Component
         return round($product->reviews->avg('rating'), 1);
     }
 
+    // CUSTOMER ONLY: Add to cart
     public function addToCart($productId)
     {
+<<<<<<< HEAD
+=======
+        if (!$this->isCustomer()) {
+            session()->flash('error', 'Only customers can add products to cart.');
+            return;
+        }
+
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
         $cart = auth()->user()->getOrCreateCart();
                 
         $item = $cart->items()
@@ -204,6 +283,7 @@ class ProductList extends Component
             session()->flash('message', 'Product added to cart!');
         }
     }
+<<<<<<< HEAD
     public function incrementQuantity()
 {
     $this->quantity++;
@@ -216,3 +296,26 @@ public function decrementQuantity()
     }
 }
 }
+=======
+    
+    public function incrementQuantity()
+    {
+        $this->quantity++;
+    }
+
+    public function decrementQuantity()
+    {
+        if ($this->quantity > 1) {
+            $this->quantity--;
+        }
+    }
+
+    // SELLER ONLY: Navigate to edit product
+    public function editProduct($productId)
+    {
+        if ($this->isSeller()) {
+            return redirect()->route('products.edit', ['id' => $productId]);
+        }
+    }
+}
+>>>>>>> 88e84881e59668fbfb56a59ae221eb778e98face
