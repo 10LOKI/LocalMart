@@ -112,8 +112,9 @@ class CartPage extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-
-            session()->flash('error', 'Something went wrong. Please try again.');
+            
+            session()->flash('error', 'Error: ' . $e->getMessage());
+            \Log::error('Checkout error: ' . $e->getMessage());
             return;
         }
     }
