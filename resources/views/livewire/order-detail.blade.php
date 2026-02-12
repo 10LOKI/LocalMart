@@ -237,6 +237,25 @@
             cursor: not-allowed;
         }
 
+        .btn-pay {
+            background: var(--sage);
+            color: var(--soft-white);
+            padding: 1rem 3rem;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .btn-pay:hover {
+            background: var(--charcoal);
+        }
+
         .error-message {
             background: var(--terracotta);
             color: white;
@@ -343,6 +362,12 @@
                     </div>
                 @endforeach
             </div>
+
+            @if(auth()->id() === $order->user_id && $order->status === 'on_hold')
+                <a href="{{ route('payments.checkout', $order->id) }}" class="btn-pay" style="display: block; text-align: center; text-decoration: none;">
+                    <i class="fas fa-credit-card"></i> Pay Online
+                </a>
+            @endif
 
             @if(session('error'))
                 <div class="error-message">

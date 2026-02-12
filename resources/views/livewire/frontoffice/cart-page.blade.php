@@ -453,7 +453,7 @@
                     </div>
 
                     <button wire:click="checkout" class="checkout-btn">
-                        <i class="fas fa-lock"></i> Proceed to Checkout
+                        <i class="fas fa-lock"></i> Pay Online
                     </button>
 
                     <a href="/products" class="continue-shopping">

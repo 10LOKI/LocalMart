@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
 use App\Livewire\CategoryForm;
@@ -50,6 +51,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', OrderList::class)->name('orders.index');
     Route::get('/orders/{id}', OrderDetail::class)->name('orders.show');
+    Route::get('/orders/{order}/pay', [PaymentController::class, 'checkout'])->name('payments.checkout');
+    Route::get('/payments/stripe/success', [PaymentController::class, 'stripeSuccess'])->name('payments.stripe.success');
+    Route::get('/payments/stripe/cancel', [PaymentController::class, 'stripeCancel'])->name('payments.stripe.cancel');
 
     Route::get('/reviews', ReviewList::class)->name('reviews.index');
 

@@ -56,8 +56,8 @@
             align-items: center;
         }
 
-        .nav-links a,
-        .nav-links button {
+        .nav-links > a,
+        .nav-links > button {
             text-decoration: none;
             color: var(--charcoal);
             font-weight: 300;
@@ -71,7 +71,7 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        .nav-links a:not(.logo):not(.profile-trigger)::after {
+        .nav-links > a:not(.logo):not(.profile-trigger)::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -82,7 +82,7 @@
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover::after {
+        .nav-links > a:hover::after {
             width: 100%;
         }
 
@@ -383,6 +383,8 @@
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>CART</span>
             </a>
+
+            <livewire:notifications-dropdown />
             
             <!-- Profile Dropdown -->
             <div class="profile-dropdown">

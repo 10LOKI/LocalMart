@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Order;
-use App\Models\User;
+use App\Services\RealtimeNotificationService;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.backoffice')]
@@ -22,39 +22,56 @@ class OrderDetail extends Component
 
     public function updateStatus()
     {
-        logger('Update status called with: ' . $this->status);
-        
         $this->validate([
-            'status' => 'required|in:on_hold,paid,delivered'
+            'status' => 'required|in:on_hold,paid,delivered,cancelled'
         ]);
 
         $order = Order::findOrFail($this->orderId);
+        $previousStatus = $order->status;
         $order->status = $this->status;
         $order->save();
-        
-        logger('Order status updated to: ' . $order->status);
-        
+
+        if ($previousStatus !== $order->status) {
+            app(RealtimeNotificationService::class)->sendToUser(
+                $order->user_id,
+                'Order status updated',
+                "Order {$order->order_number} is now " . str_replace('_', ' ', $order->status) . '.',
+                'info',
+                ['order_id' => $order->id, 'status' => $order->status]
+            );
+        }
+
         session()->flash('message', 'Order status updated successfully!');
     }
 
     public function cancelOrder()
     {
-        if (!auth()->user()->hasRole('customer') || $this->order->user_id !== auth()->id()) {
+        $order = Order::with('items.product')->findOrFail($this->orderId);
+
+        if (! auth()->user()->hasRole('customer') || $order->user_id !== auth()->id()) {
             session()->flash('error', 'Unauthorized action');
             return;
         }
 
-        if ($this->order->status === 'cancelled') {
+        if ($order->status === 'cancelled') {
             session()->flash('error', 'Order already cancelled');
             return;
         }
 
-        foreach ($this->order->items as $item) {
+        foreach ($order->items as $item) {
             $item->product->increment('stock', $item->quantity);
         }
 
-        $this->order->update(['status' => 'cancelled']);
+        $order->update(['status' => 'cancelled']);
         $this->status = 'cancelled';
+
+        app(RealtimeNotificationService::class)->sendToRoles(
+            ['admin', 'seller'],
+            'Order cancelled',
+            "Order {$order->order_number} has been cancelled by customer.",
+            'warning',
+            ['order_id' => $order->id]
+        );
 
         session()->flash('message', 'Order cancelled successfully. Stock has been restored.');
     }

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Services\RealtimeNotificationService;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 
@@ -93,12 +94,29 @@ class CartPage extends Component
 
             DB::commit();
 
-            session()->flash(
-                'message',
-                'Order placed successfully! Order number: ' . $order->order_number
+            $notificationService = app(RealtimeNotificationService::class);
+            $notificationService->sendToUser(
+                $order->user_id,
+                'Order created',
+                "Order {$order->order_number} was created. Complete payment to confirm it.",
+                'info',
+                ['order_id' => $order->id]
             );
 
-            return redirect()->route('orders.show', $order->id);
+            $notificationService->sendToRoles(
+                ['admin', 'seller'],
+                'New order',
+                "A new order ({$order->order_number}) was placed.",
+                'info',
+                ['order_id' => $order->id]
+            );
+
+            session()->flash(
+                'message',
+                'Order created. Continue to secure payment.'
+            );
+
+            return redirect()->route('payments.checkout', $order->id);
 
         } catch (\Exception $e) {
             DB::rollBack();
